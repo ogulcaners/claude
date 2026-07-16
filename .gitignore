@@ -1,0 +1,2 @@
+# gstack browser daemon runtime state (contains auth tokens — never commit)
+.gstack/
