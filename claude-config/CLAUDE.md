@@ -22,14 +22,21 @@ Bu kurallar her akademik skill için bağlayıcıdır; skill dosyaları bunları
 
 # Kaynak Doğrulama Protokolü
 
-Kaynak doğrulama için ücretsiz, anahtar gerektirmeyen resmi API'leri **WebFetch** ile doğrudan sorgula (üçüncü taraf MCP sunucusu kurulmadı — bkz. proje CLAUDE.md'deki güvenlik denetimi gerekçesi):
+**Önemli bulgu (2026-07-17):** Bu ortamın ağ ilkesi, `WebFetch`'in Crossref/OpenAlex/Semantic Scholar/DOI.org gibi genel internet adreslerine (hatta Wikipedia'ya) doğrudan erişimini engelliyor (proxy 403 döndürüyor — bkz. `/root/.ccr/README.md`, "organization policy denial"). Bu nedenle birincil doğrulama yöntemi **WebSearch** üzerinden çapraz doğrulamadır. Farklı bir ortamda (kullanıcının kendi bilgisayarı veya tam ağ erişimli bir uzak ortam) çalışılıyorsa ve `WebFetch` bu API'lere ulaşabiliyorsa, doğrudan API sorgusu (aşağıda) daha kesin olduğu için tercih edilmelidir — önce kısa bir deneme sorgusuyla erişilebilirliği kontrol et.
 
-- **Crossref** (DOI/başlık doğrulama): `https://api.crossref.org/works?query.bibliographic=<başlık>&rows=5` veya doğrudan `https://api.crossref.org/works/<DOI>`
-- **OpenAlex** (başlık/yazar/atıf sayısı): `https://api.openalex.org/works?search=<başlık>` veya `https://api.openalex.org/works/doi:<DOI>`
-- **Semantic Scholar** (özet, atıf grafiği): `https://api.semanticscholar.org/graph/v1/paper/search?query=<başlık>&fields=title,authors,year,externalIds,abstract`
-- **DOI çözümleme**: `https://doi.org/<DOI>` yönlendirmesi çalışıyor mu kontrol et
+**Birincil yöntem — WebSearch ile çapraz doğrulama (her ortamda çalışır):**
+1. Kaynağın başlığını (gerekirse yazar adıyla birlikte) WebSearch ile ara.
+2. Başlık, yazar(lar), yıl ve DOI'nin **en az iki bağımsız sonuçta** (ör. yayıncı sayfası + ResearchGate/PubMed/kurumsal arşiv/IDEAS-RePEc gibi ikinci bir dizin) tutarlı şekilde göründüğünü doğrula.
+3. Tutarsızlık varsa (ör. farklı yıl, eksik cilt/sayı/sayfa bilgisi) bunu kaynakçada veya metinde **açıkça belirt** — "doğrulanamadı" ya da "cilt/sayfa bilgisi teyit edilemedi" gibi — asla eksik bilgiyi tahminle tamamlama.
+4. Kaynak hiçbir bağımsız sonuçta bulunamıyorsa, kullanıcıya açıkça bildir ve kaynakçaya ekleme.
 
-Doğrulama adımı: (a) başlık + yazar soyadları + yıl + DOI en az iki bağımsız kaynaktan (ör. Crossref + OpenAlex) eşleşmeli, (b) eşleşmiyorsa veya kaynak bulunamıyorsa kullanıcıya açıkça bildir, (c) sonucu kaynakçaya eklemeden önce bu kontrolü belgelediğinden emin ol.
+**İkincil yöntem — WebFetch ile doğrudan API sorgusu (yalnızca bu ortamda ağ erişimi varsa):**
+- **Crossref**: `https://api.crossref.org/works?query.bibliographic=<başlık>&rows=5` veya `https://api.crossref.org/works/<DOI>`
+- **OpenAlex**: `https://api.openalex.org/works?search=<başlık>` veya `https://api.openalex.org/works/doi:<DOI>`
+- **Semantic Scholar**: `https://api.semanticscholar.org/graph/v1/paper/search?query=<başlık>&fields=title,authors,year,externalIds,abstract`
+- **DOI çözümleme**: `https://doi.org/<DOI>` yönlendirmesi
+
+Hangi yöntem kullanılırsa kullanılsın: sonucu kaynakçaya eklemeden önce doğrulamanın nasıl yapıldığını (WebSearch çapraz kontrol mü, doğrudan API mi) ve hangi noktaların teyit edilemediğini belgelediğinden emin ol.
 
 Not: `citation-style-language/styles` deposundaki `apa.csl` (ve Türkçe için `apa-tr.csl`) Zotero/Pandoc ile kullanılabilecek güncel, resmi APA 7 stil dosyalarıdır — kullanıcı Zotero veya Pandoc/Quarto tabanlı bir yazım akışına geçerse referans olarak önerilebilir.
 

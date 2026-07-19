@@ -5,7 +5,7 @@
 ## Karar Mantığı
 
 Hiçbir üçüncü taraf skill veya MCP sunucusu bu oturumda kurulmadı. Gerekçe:
-1. Akademik kaynak doğrulama ihtiyacı (Crossref/OpenAlex/Semantic Scholar/DOI), zaten mevcut olan **WebFetch** aracıyla bu servislerin ücretsiz, anahtar gerektirmeyen REST API'lerine doğrudan istek atılarak karşılanabiliyor — üçüncü taraf kod çalıştırmaya gerek yok.
+1. Akademik kaynak doğrulama ihtiyacı, üçüncü taraf kod çalıştırmadan karşılanabiliyor. **Not (örnek tarama testinde ortaya çıktı):** Bu ortamın ağ ilkesi `WebFetch`'in Crossref/OpenAlex/Semantic Scholar/DOI.org'a (hatta Wikipedia'ya) doğrudan erişimini engelliyor — bu yüzden gerçek çalışan yöntem `WebSearch` ile çapraz doğrulamadır (başlık/yazar/yıl/DOI en az iki bağımsız sonuçta eşleşmeli). Daha geniş ağ erişimli bir ortamda `WebFetch`→API doğrudan sorgusu daha kesin olduğu için tercih edilebilir; bkz. `~/.claude/CLAUDE.md`.
 2. İncelenen akademik MCP sunucularının **her birinde** en az bir ciddi uyarı bulundu (aşağıda liste).
 3. `modelcontextprotocol/servers` (filesystem/fetch/memory) gibi temiz çıkan sunucular bile Claude Code'un yerleşik araçlarıyla (Read/Write/Glob/Grep, WebFetch, auto-memory) işlevsel olarak örtüşüyor — kurulumları "gereksiz" (kullanıcının kendi talimatındaki yasak listesinde).
 4. 7 özel akademik skill zaten tam olarak istenen iş akışını (14 adımlı literatür taraması, APA7, doğrulama protokolü) kapsıyor; genel amaçlı üçüncü taraf "research" skill'leri eklemek işlev çakışmasına yol açardı.
