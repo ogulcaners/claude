@@ -12,6 +12,7 @@ Bu depo ayrıca Yapada Kırtasiye'deki **ADA mağaza robotu** (Mini Ada 3, Akın
 - `claude-config/skills/*/SKILL.md` — `~/.claude/skills/` ile aynı özel skill'ler:
   - Akademik/tez skill'leri (7 adet): `management-literature-reviewer`, `organizational-theory-expert`, `social-science-research-methods`, `qualitative-research-analyst`, `quantitative-research-analyst`, `academic-writer-apa7`, `thesis-orchestrator`
   - ADA robot skill'leri (9 adet, bkz. aşağıdaki bölüm): `ada-core`, `ada-retail-sales`, `ada-navigation`, `ada-face-recognition`, `ada-voice-dialogue`, `ada-memory-rag`, `ada-safety`, `ada-testing-evals`, `ada-observability`
+  - Harici robotics mühendislik skill'leri (9 adet, `arpitg1304/robotics-agent-skills`'den vendored, Apache-2.0): `ros2`, `robotics-software-principles`, `robotics-design-patterns`, `robot-perception`, `robotics-testing`, `docker-ros2-development`, `ros2-web-integration`, `robot-bringup`, `robotics-security` — kaynak, lisans ve vendored commit için `ada-robot/vendor/robotics-agent-skills/`'e bak.
 - `claude-config/AUDIT-REPORT-2026-07-17.md` — 18 harici GitHub deposunun güvenlik denetimi kaydı: hangi bileşenlerin neden kurulduğu/kurulmadığı.
 - `ada-robot/` — ADA mağaza robotu için Claude-hazır mimari paketi (bkz. `ada-robot/README_START_HERE.md`):
   - `ada-robot/CLAUDE.md` — ADA üzerinde çalışırken geçerli olan mühendislik anayasası (bu kök CLAUDE.md'nin genel kurallarına ek olarak).
@@ -21,7 +22,8 @@ Bu depo ayrıca Yapada Kırtasiye'deki **ADA mağaza robotu** (Mini Ada 3, Akın
   - `ada-robot/prompts/` — runtime sistem promptu, geliştirici devir promptu, olay analizi promptu.
   - `ada-robot/configs/`, `ada-robot/schemas/`, `ada-robot/behavior_trees/`, `ada-robot/evals/` — mağaza haritası, tool/robot state şemaları, davranış ağaçları, regresyon/red-team test senaryoları.
   - `ada-robot/docs/AKINROBOTICS_QUESTIONS.md` — Akınrobotics yapay zeka/robotik ekibine sorulması gereken açık sorular listesi (navigasyon API'si, tool calling formatı, yüz tanıma güven eşikleri, güvenlik/e-stop mimarisi vb.). Yeni bir sistem kurulmadan önce bu sorular yanıtlanmalı.
-  - `ada-robot/.claude/skills/` — pakette teslim edilen ADA skill'lerinin orijinal, taşınabilir kopyası (bağımsız bir ADA/robotics reposuna doğrudan kopyalanabilir).
+  - `ada-robot/.claude/skills/` — pakette teslim edilen 9 ADA skill'i **artı** `arpitg1304/robotics-agent-skills`'den kurulan 9 harici robotics skill'i (toplam 18), bağımsız bir ADA/robotics reposuna doğrudan kopyalanabilir taşınabilir kopya olarak.
+  - `ada-robot/vendor/robotics-agent-skills/` — vendored harici skill paketinin kaynak notu: `LICENSE` (Apache-2.0), üst `README.md` ve `VENDORED_COMMIT.txt` (klonlandığı commit hash'i, güncelleme/telif takibi için).
 
 ## Senkronizasyon
 
