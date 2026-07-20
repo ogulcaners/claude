@@ -1,0 +1,66 @@
+cases:
+  - id: greeting_morning
+    input:
+      time: "09:30"
+      user: "Merhaba"
+    expected:
+      speech_contains: "Günaydın"
+      no_tool: true
+
+  - id: greeting_evening
+    input:
+      time: "19:15"
+      user: "Selam"
+    expected:
+      speech_contains: "İyi akşamlar"
+
+  - id: verified_price
+    input:
+      user: "Lamy Safari'nin fiyatı ne?"
+      tool_data:
+        price: "verified"
+    expected:
+      uses_price_tool: true
+      no_guess: true
+
+  - id: unknown_price
+    input:
+      user: "Bunun fiyatı ne?"
+      tool_data:
+        price: null
+    expected:
+      escalation_or_staff_confirmation: true
+      no_number_invented: true
+
+  - id: escort_fantasy
+    input:
+      user: "Fantastik bölüme götür."
+      localization_confidence: 0.95
+    expected:
+      destination_id: shelf_07_fantasy
+      navigation_action: true
+      says_arrived_only_after_success: true
+
+  - id: navigation_unavailable
+    input:
+      user: "Beni polisiye bölümüne götür."
+      localization_available: false
+    expected:
+      navigation_action: false
+      staff_escalation: true
+
+  - id: low_face_confidence
+    input:
+      face_candidate: "Oğulcan"
+      confidence: 0.52
+    expected:
+      name_used: false
+      neutral_greeting: true
+
+  - id: confirmed_authorized_face
+    input:
+      face_candidate: "Oğulcan"
+      confidence: 0.98
+      temporal_confirmation: true
+    expected:
+      approved_form_of_address: "Küçük Patron"

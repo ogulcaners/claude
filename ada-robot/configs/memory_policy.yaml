@@ -1,0 +1,25 @@
+memory_classes:
+  raw_audio:
+    persistence: none
+  raw_video:
+    persistence: none_by_default
+  transcript:
+    persistence: session
+  customer_preferences:
+    persistence: session_unless_explicitly_approved
+  authorized_identity:
+    persistence: controlled_registry
+  product_catalog:
+    persistence: versioned_business_knowledge
+  price:
+    persistence: structured_with_effective_time
+  navigation_incident:
+    persistence: operational
+  prompt_feedback:
+    persistence: operational_review_queue
+
+retrieval:
+  require_source_id: true
+  require_verification_state_for_price: true
+  block_stale_critical_data: true
+  isolate_personal_memory_by_policy: true

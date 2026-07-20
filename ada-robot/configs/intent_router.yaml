@@ -1,0 +1,37 @@
+intents:
+  greeting:
+    action: dialogue_only
+  product_lookup:
+    required_sources: [catalog]
+  price_lookup:
+    required_sources: [verified_price_service]
+    forbid_guessing: true
+  recommendation:
+    required_sources: [catalog]
+    max_initial_options: 3
+  location_question:
+    route: destination_resolver
+  escort_request:
+    route: navigation
+  staff_request:
+    route: human_escalation
+  authorized_entertainment:
+    route: entertainment_tool
+    requires_authorization: true
+  emergency:
+    route: emergency_handler
+  unrelated_or_disallowed:
+    route: brief_boundary_response
+
+routing_order:
+  - emergency
+  - staff_override
+  - active_navigation_control
+  - customer_correction
+  - escort_request
+  - price_lookup
+  - product_lookup
+  - recommendation
+  - location_question
+  - greeting
+  - unrelated_or_disallowed

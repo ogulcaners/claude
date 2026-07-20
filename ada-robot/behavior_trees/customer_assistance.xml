@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<root BTCPP_format="4">
+  <BehaviorTree ID="CustomerAssistance">
+    <ReactiveFallback>
+      <Sequence>
+        <IsEmergencyStopActive/>
+        <SafeStop/>
+      </Sequence>
+
+      <Sequence>
+        <IsHumanOverrideActive/>
+        <PauseAutonomy/>
+      </Sequence>
+
+      <Sequence>
+        <HasEscortRequest/>
+        <ValidateDestination/>
+        <CheckLocalization/>
+        <CheckSensorFreshness/>
+        <Speak text="Elbette, birlikte gidelim."/>
+        <NavigateWithRecovery destination="{destination_id}"/>
+        <VerifyArrival destination="{destination_id}"/>
+        <Speak text="Geldik."/>
+      </Sequence>
+
+      <Sequence>
+        <HasInformationRequest/>
+        <RetrieveVerifiedKnowledge/>
+        <GenerateCompactSpeech/>
+        <Speak text="{speech}"/>
+      </Sequence>
+
+      <Sequence>
+        <NeedsStaff/>
+        <RequestStaff/>
+        <Speak text="Bir ekip arkadaşımızdan destek isteyeceğim."/>
+      </Sequence>
+
+      <Speak text="{fallback_speech}"/>
+    </ReactiveFallback>
+  </BehaviorTree>
+</root>

@@ -1,0 +1,66 @@
+map:
+  id: yapada-margi-main
+  version: "TO_BE_FILLED_FROM_ROBOT"
+  coordinate_frame: "TO_BE_FILLED_FROM_ROBOT"
+  arrival_tolerance_m: "TO_BE_CALIBRATED"
+
+destinations:
+  - id: shelf_01_family_child_health
+    names_tr: ["aile ve çocuk sağlığı", "sağlık kitapları", "1. raf"]
+    coordinate: null
+  - id: shelf_02_personal_development
+    names_tr: ["kişisel gelişim", "2. raf"]
+    coordinate: null
+  - id: shelf_03_social_sciences
+    names_tr: ["felsefe", "sosyoloji", "psikoloji", "3. raf"]
+    coordinate: null
+  - id: shelf_biography
+    names_tr: ["biyografi"]
+    coordinate: null
+  - id: shelf_04_06_world_literature
+    names_tr: ["çağdaş dünya edebiyatı", "dünya edebiyatı", "4. raf", "5. raf", "6. raf"]
+    coordinate: null
+  - id: shelf_history_politics
+    names_tr: ["tarih", "politika"]
+    coordinate: null
+  - id: shelf_07_fantasy
+    names_tr: ["fantastik", "7. raf"]
+    coordinate: null
+  - id: shelf_08_crime
+    names_tr: ["polisiye", "8. raf"]
+    coordinate: null
+  - id: shelf_09_11_turkish_literature
+    names_tr: ["çağdaş türk edebiyatı", "türk edebiyatı", "9. raf", "10. raf", "11. raf"]
+    coordinate: null
+  - id: shelf_children_literature
+    names_tr: ["çocuk edebiyatı"]
+    coordinate: null
+  - id: virtual_wall_paints
+    names_tr: ["boyalar", "resim boyaları"]
+    coordinate: null
+  - id: virtual_wall_hobby_art
+    names_tr: ["hobi sanat", "hobi ve sanat"]
+    coordinate: null
+  - id: virtual_wall_thermos
+    names_tr: ["termos", "matara"]
+    coordinate: null
+  - id: virtual_wall_age_0_3
+    names_tr: ["0-3 yaş", "sıfır üç yaş"]
+    coordinate: null
+  - id: virtual_wall_classics
+    names_tr: ["klasikler", "dünya klasikleri"]
+    coordinate: null
+  - id: virtual_wall_children_adventure
+    names_tr: ["çocuk fantastik macera", "çocuk macera"]
+    coordinate: null
+  - id: virtual_wall_fairy_pedagogy
+    names_tr: ["masal", "pedagojik kitaplar"]
+    coordinate: null
+  - id: virtual_wall_preschool
+    names_tr: ["okul öncesi"]
+    coordinate: null
+
+rules:
+  never_generate_coordinates: true
+  escort_phrases_tr: ["götür", "göster", "birlikte gidelim", "nerede, götürür müsün"]
+  arrival_phrase_tr: "Geldik."

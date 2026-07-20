@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ADA Runtime Model Response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "speech",
+    "intent",
+    "action_proposals",
+    "needs_clarification",
+    "escalation",
+    "reason_code",
+    "knowledge_sources"
+  ],
+  "properties": {
+    "speech": {
+      "type": "string",
+      "maxLength": 600
+    },
+    "intent": {
+      "type": "string"
+    },
+    "action_proposals": {
+      "type": "array",
+      "items": {
+        "$ref": "action_envelope.schema.json"
+      }
+    },
+    "needs_clarification": {
+      "type": "boolean"
+    },
+    "escalation": {
+      "type": "boolean"
+    },
+    "reason_code": {
+      "type": "string"
+    },
+    "knowledge_sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

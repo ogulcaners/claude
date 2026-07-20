@@ -1,0 +1,31 @@
+routes:
+  intent_classification:
+    model_class: small_fast
+    max_retries: 0
+  exact_catalog_lookup:
+    model_class: none
+    implementation: deterministic_tool
+  dialogue_simple:
+    model_class: small_fast
+    max_output_tokens: 120
+  recommendation_complex:
+    model_class: capable
+    max_output_tokens: 220
+  action_planning:
+    model_class: capable
+    structured_output_required: true
+    max_tool_loops: 2
+  safety_validation:
+    model_class: deterministic_first
+    optional_secondary_model: small_fast
+
+budgets:
+  per_turn_tool_loop_limit: 2
+  per_turn_model_retry_limit: 1
+  navigation_recovery_limit: 2
+  session_context_strategy: summarize_and_pin_state
+
+fallback:
+  llm_unavailable: deterministic_store_assistant
+  catalog_unavailable: staff_escalation
+  localization_unavailable: no_motion

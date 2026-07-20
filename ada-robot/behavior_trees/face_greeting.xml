@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<root BTCPP_format="4">
+  <BehaviorTree ID="FaceGreeting">
+    <Sequence>
+      <IsNewEncounter/>
+      <HasStableFaceTrack/>
+      <Fallback>
+        <Sequence>
+          <IsAuthorizedIdentityConfidenceHigh/>
+          <HasNotGreetedIdentityRecently/>
+          <SpeakConfirmedIdentityGreeting/>
+          <MarkEncounterGreeted/>
+        </Sequence>
+        <Sequence>
+          <HasNotGreetedEncounter/>
+          <SpeakNeutralTimeGreeting/>
+          <MarkEncounterGreeted/>
+        </Sequence>
+      </Fallback>
+    </Sequence>
+  </BehaviorTree>
+</root>

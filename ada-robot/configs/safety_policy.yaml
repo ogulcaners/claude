@@ -1,0 +1,31 @@
+action_policy:
+  default: deny
+  allow:
+    - speak
+    - stop_speaking
+    - lookup_product
+    - lookup_price
+    - resolve_destination
+    - navigate_to_destination
+    - cancel_navigation
+    - request_staff
+    - perform_authorized_expression
+
+motion:
+  require_fresh_sensors: true
+  require_localization: true
+  require_destination_allowlist: true
+  require_cancel_support: true
+  raw_motor_commands_from_llm: forbidden
+
+privacy:
+  expose_face_score_in_speech: false
+  persist_unknown_faces: false
+  permanent_customer_memory_default: false
+
+topics:
+  store_related: allowed
+  politics: redirect
+  football_argument: redirect
+  abusive_content: deescalate
+  unrelated_long_chat: brief_boundary

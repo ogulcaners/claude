@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ADA Tool Contracts",
+  "definitions": {
+    "navigate_to_destination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "destination_id",
+        "session_id",
+        "map_version"
+      ],
+      "properties": {
+        "destination_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "session_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "map_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "customer_requested_escort": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "cancel_navigation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reason"
+      ],
+      "properties": {
+        "reason": {
+          "type": "string",
+          "enum": [
+            "customer_request",
+            "staff_override",
+            "safety_event",
+            "new_destination",
+            "timeout"
+          ]
+        }
+      }
+    },
+    "lookup_price": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "product_identifier"
+      ],
+      "properties": {
+        "product_identifier": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "request_staff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reason_code"
+      ],
+      "properties": {
+        "reason_code": {
+          "type": "string",
+          "enum": [
+            "customer_requested",
+            "price_unavailable",
+            "product_unavailable",
+            "navigation_failed",
+            "localization_unavailable",
+            "safety_concern",
+            "system_failure",
+            "other"
+          ]
+        },
+        "brief": {
+          "type": "string",
+          "maxLength": 300
+        }
+      }
+    }
+  }
+}

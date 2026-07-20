@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ADA Robot State",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "timestamp",
+    "mode",
+    "localization",
+    "navigation",
+    "sensors",
+    "session",
+    "network",
+    "capabilities",
+    "safety"
+  ],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "idle",
+        "listening",
+        "responding",
+        "navigating",
+        "recovering",
+        "escalating",
+        "paused",
+        "emergency_stop",
+        "degraded"
+      ]
+    },
+    "localization": {
+      "type": "object",
+      "required": [
+        "available",
+        "confidence",
+        "map_version"
+      ],
+      "properties": {
+        "available": {
+          "type": "boolean"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "map_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pose": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "yaw": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "x",
+            "y",
+            "yaw"
+          ]
+        }
+      }
+    },
+    "navigation": {
+      "type": "object",
+      "required": [
+        "status",
+        "destination_id",
+        "progress",
+        "last_result"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "idle",
+            "validating",
+            "active",
+            "arrived_candidate",
+            "succeeded",
+            "failed",
+            "cancelled",
+            "recovering"
+          ]
+        },
+        "destination_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "progress": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "last_result": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "sensors": {
+      "type": "object",
+      "required": [
+        "fresh",
+        "obstacle",
+        "health"
+      ],
+      "properties": {
+        "fresh": {
+          "type": "boolean"
+        },
+        "obstacle": {
+          "type": "boolean"
+        },
+        "health": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "degraded",
+            "fault"
+          ]
+        }
+      }
+    },
+    "session": {
+      "type": "object",
+      "required": [
+        "id",
+        "active",
+        "greeted"
+      ],
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "greeted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "network": {
+      "type": "object",
+      "required": [
+        "online",
+        "llm_available",
+        "catalog_available"
+      ],
+      "properties": {
+        "online": {
+          "type": "boolean"
+        },
+        "llm_available": {
+          "type": "boolean"
+        },
+        "catalog_available": {
+          "type": "boolean"
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "safety": {
+      "type": "object",
+      "required": [
+        "emergency_stop",
+        "human_override",
+        "motion_allowed"
+      ],
+      "properties": {
+        "emergency_stop": {
+          "type": "boolean"
+        },
+        "human_override": {
+          "type": "boolean"
+        },
+        "motion_allowed": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

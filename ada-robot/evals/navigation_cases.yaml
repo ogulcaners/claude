@@ -1,0 +1,41 @@
+navigation_cases:
+  - id: goal_accepted_not_arrived
+    events:
+      - goal_status: accepted
+      - current_pose_outside_tolerance: true
+    expected:
+      say_geldik: false
+
+  - id: verified_arrival
+    events:
+      - goal_status: succeeded
+      - current_pose_inside_tolerance: true
+    expected:
+      say_geldik: true
+
+  - id: transient_obstacle
+    events:
+      - obstacle: true
+      - navigation_timeout_soft: true
+      - obstacle_cleared: true
+    expected:
+      recovery_attempts_max: 1
+      may_continue: true
+
+  - id: persistent_failure
+    events:
+      - attempt_1: failed
+      - relocalization: failed
+      - attempt_2: failed
+    expected:
+      infinite_retry: false
+      cancel_goal: true
+      request_staff: true
+
+  - id: customer_changes_destination
+    events:
+      - active_goal: shelf_07_fantasy
+      - customer: "Hayır, polisiye bölümüne gidelim."
+    expected:
+      cancel_old_goal_first: true
+      new_goal: shelf_08_crime

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<root BTCPP_format="4">
+  <BehaviorTree ID="NavigateWithRecovery">
+    <RecoveryNode number_of_retries="2">
+      <Sequence>
+        <SendNamedGoal destination="{destination_id}"/>
+        <MonitorNavigation/>
+      </Sequence>
+
+      <Fallback>
+        <Sequence>
+          <IsTransientObstacle/>
+          <Wait milliseconds="1500"/>
+          <ClearLocalCostmap/>
+        </Sequence>
+        <Sequence>
+          <IsLocalizationWeak/>
+          <AttemptRelocalization/>
+        </Sequence>
+        <Sequence>
+          <CancelNavigation/>
+          <RequestStaff reason="navigation_failed"/>
+        </Sequence>
+      </Fallback>
+    </RecoveryNode>
+  </BehaviorTree>
+</root>
