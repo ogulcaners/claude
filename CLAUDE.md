@@ -15,7 +15,11 @@ Kullanıcı profili: İşletme Anabilim Dalı — **Yönetim ve Organizasyon** y
   - `quantitative-research-analyst` — nicel araştırma tasarımı ve istatistik
   - `academic-writer-apa7` — APA 7 kaynak gösterme ve akademik yazım
   - `thesis-orchestrator` — tüm tez sürecini koordine eden meta-skill
+- `claude-config/skills/{cast,paint,_jutsu,design-dna}` — akademik kapsam dışı, kullanıcının ayrıca talep ettiği tasarım/creative-coding skill'leri (bkz. `AUDIT-REPORT-2026-07-21.md`):
+  - `cast` / `paint` / `_jutsu/*` — [AThevon/genjutsu](https://github.com/AThevon/genjutsu) deposundan, motion design ve UI illüzyon skill'leri
+  - `design-dna` — [zanwei/design-dna](https://github.com/zanwei/design-dna) deposundan, tasarım DNA'sı çıkarma/uygulama skill'i
 - `claude-config/AUDIT-REPORT-2026-07-17.md` — 18 harici GitHub deposunun güvenlik denetimi kaydı: hangi bileşenlerin neden kurulduğu/kurulmadığı.
+- `claude-config/AUDIT-REPORT-2026-07-21.md` — genjutsu ve design-dna depolarının güvenlik denetimi kaydı.
 
 ## Senkronizasyon
 
