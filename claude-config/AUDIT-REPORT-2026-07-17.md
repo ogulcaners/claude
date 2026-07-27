@@ -43,3 +43,17 @@ Hiçbir üçüncü taraf skill veya MCP sunucusu bu oturumda kurulmadı. Gerekç
 
 - Kendi bilgisayarında Zotero kullanıyorsa: `54yyyu/zotero-mcp` kurulabilir (Zotero masaüstü + "Allow other applications..." ayarı gerekir).
 - Word/PDF üretimi için Anthropic'in resmi `docx`/`pdf`/`doc-coauthoring` skill'leri `/plugin marketplace add anthropics/skills` ve `/plugin install document-skills@anthropic-agent-skills` ile kurulabilir.
+
+## Ek Değerlendirme — 2026-07-27: diegosouzapw/OmniRoute
+
+Kullanıcı bu depoyu paylaşıp `claude-config`'e bir şey taşınıp taşınamayacağını sordu. Salt-okunur inceleme (repo `add_repo` ile bu oturuma eklenemedi — farklı sahiplik katmanı; bunun yerine genel GitHub sayfaları/raw dosyalar WebFetch ile incelendi).
+
+**Ne olduğu:** OmniRoute bir Claude skill'i veya MCP sunucusu değil — 290+ sağlayıcıyı (OpenAI, Anthropic, Bedrock vb.) tek bir yerel uç noktada (`http://localhost:20128/v1`) birleştiren, token sıkıştırma ve otomatik yönlendirme yapan bağımsız bir Node.js/Next.js AI gateway sunucusudur. Kendi `CLAUDE.md` dosyası da bu depoya katkıda bulunacak geliştiriciler için bir mühendislik rehberidir (worktree kuralları, güvenlik kuralları, test zorunluluğu) — kullanıcının akademik asistanına kopyalanabilecek bir şey değildir.
+
+**Karar: Hiçbir şey taşınmadı/kurulmadı.** Gerekçe:
+1. **Kategori uyuşmazlığı** — `claude-config/skills/` yapısı akademik iş akışı skill'lerinden oluşuyor; OmniRoute bir geliştirici altyapı/proxy aracı. Tez/literatür/APA7/kaynak doğrulama süreciyle hiçbir ilgisi yok.
+2. **Güven sinyalleri karışık** — MIT lisanslı ve kendi `CLAUDE.md`'sinde ciddi güvenlik kuralları (hata mesajı sanitizasyonu, Zod doğrulama, PII redaksiyonunun varsayılan kapalı olması) var; ancak tek kişilik bir GitHub hesabında (`diegosouzapw`) 31,2k yıldız / 4k fork, "500+ katkıda bulunan" ve "Kimi (Moonshot AI) destekli" iddiaları bulunuyor ve bu iddialar doğrulanamadı (contributors grafiği yüklenemedi). Bu kalıp, yukarıdaki tabloda `Imbad0202/academic-research-skills` için işaretlenen "istatistiksel olarak anormal yıldız oranı" güven riskiyle aynı.
+3. **Güven yüzeyi çok daha geniş** — Kurulumu, kullanıcının TÜM AI sağlayıcı trafiğini (Claude Code dahil) yerel bir üçüncü-taraf proxy üzerinden geçirmesini, `JWT_SECRET`/`API_KEY_SECRET` gibi kimlik bilgilerini saklamasını ve bir `postinstall` betiği çalıştırmasını gerektiriyor (betiğin kendisi zararsız görünüyor — `better-sqlite3` runtime'ını önceden çözümlüyor — ama npm `postinstall` genel olarak tedarik zinciri riski taşıyan bilinen bir vektördür). Bu, şimdiye dek incelenen herhangi bir akademik MCP sunucusundan çok daha büyük bir blast radius.
+4. **Bu oturumun kapsamı dışında** — Ayrıca bu, yerel makinede (kullanıcının kendi bilgisayarında) çalıştırılacak bağımsız bir sunucu; bu geçici bulut oturumunda kurulup çalıştırılması zaten anlamsız (54yyyu/zotero-mcp kaydındaki mantığın aynısı).
+
+**Kullanıcı için not:** Maliyet optimizasyonu / çoklu sağlayıcı yönlendirmesi için böyle bir gateway kullanmak isterse, bu ayrı ve bağımsız bir karar olmalı — kimlik bilgisi saklama ve `postinstall` yüzeyini kendi makinesinde, güncel bağımlılık/CVE taramasıyla birlikte değerlendirmesi önerilir. Akademik asistan yapılandırmasının bir parçası değildir.
