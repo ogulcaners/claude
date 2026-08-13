@@ -15,7 +15,12 @@ Kullanıcı profili: İşletme Anabilim Dalı — **Yönetim ve Organizasyon** y
   - `quantitative-research-analyst` — nicel araştırma tasarımı ve istatistik
   - `academic-writer-apa7` — APA 7 kaynak gösterme ve akademik yazım
   - `thesis-orchestrator` — tüm tez sürecini koordine eden meta-skill
+  - `emil-design-eng` — akademik kapsamın dışında, kullanıcının isteği üzerine eklenmiş tasarım/animasyon skili (bkz. aşağıda)
 - `claude-config/AUDIT-REPORT-2026-07-17.md` — 18 harici GitHub deposunun güvenlik denetimi kaydı: hangi bileşenlerin neden kurulduğu/kurulmadığı.
+
+## Akademik Kapsam Dışı Skiller
+
+- `emil-design-eng` — [emilkowalski/skills](https://github.com/emilkowalski/skills) deposundaki `emil-design-eng` skilinin birebir kopyası. Emil Kowalski'nin (Vercel/Linear, Sonner/Vaul yazarı) UI animasyon/geçiş/mikro-etkileşim tasarım felsefesini kapsar. 2026-08-13'te kullanıcı isteğiyle eklendi. Aynı kaynak depoda `animate`, `review-animations`, `improve-animations`, `find-animation-opportunities`, `animation-vocabulary`, `apple-design`, `pick-ui-library`, `prototype`, `ask-sonner` gibi daha dar kapsamlı yardımcı skiller de var — henüz eklenmedi, istenirse eklenebilir.
 
 ## Senkronizasyon
 
