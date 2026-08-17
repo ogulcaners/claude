@@ -43,3 +43,17 @@ Hiçbir üçüncü taraf skill veya MCP sunucusu bu oturumda kurulmadı. Gerekç
 
 - Kendi bilgisayarında Zotero kullanıyorsa: `54yyyu/zotero-mcp` kurulabilir (Zotero masaüstü + "Allow other applications..." ayarı gerekir).
 - Word/PDF üretimi için Anthropic'in resmi `docx`/`pdf`/`doc-coauthoring` skill'leri `/plugin marketplace add anthropics/skills` ve `/plugin install document-skills@anthropic-agent-skills` ile kurulabilir.
+
+## Ek Değerlendirme — 2026-08-17: open-free-llm-api/awesome-freellm-apis
+
+Kullanıcı bu depoyu paylaştı. Salt-okunur inceleme yapıldı (`git clone --depth 1`, README + `code-examples/` okundu, hiçbir script çalıştırılmadı).
+
+**Ne olduğu:** Bu bir Claude skill'i veya MCP sunucusu değil — 31 sağlayıcıdan 442+ ücretsiz LLM API'sini listeleyen, çalıştırılabilir kod içermeyen bir "awesome list" / dizin deposu (`README.md` + 4 dil çevirisi + `code-examples/*.md`). Ticari bir sitenin (freellm.net, günlük otomatik güncelleniyor) statik aynası niteliğinde. Yukarıdaki tabloda `VoltAgent/awesome-agent-skills` için işaretlenenle aynı kategori: "Liste (kod yok) | Kurulum gerektirmiyor".
+
+**Karar: Hiçbir şey kurulmadı/taşınmadı.** Gerekçe:
+1. **Kategori uyuşmazlığı** — akademik iş akışıyla (tez/literatür/APA7/kaynak doğrulama) hiçbir ilgisi yok; bu bir ticari LLM API sağlayıcı karşılaştırma dizini.
+2. **Çalıştırılabilir kod içermiyor** — `code-examples/` altındaki dosyalar sadece kopyala-yapıştır ortam değişkeni/kod parçacıkları; script, `postinstall`, veya MCP tanımı yok.
+3. **Önemli uyarı — kullanıcıya önerilmemesi gereken bir yapılandırma içeriyor:** `code-examples/claude-code.md`, Claude Code'un `ANTHROPIC_BASE_URL` ve `ANTHROPIC_AUTH_TOKEN` ortam değişkenlerini Anthropic dışındaki üçüncü taraf sağlayıcılara (Groq, NVIDIA NIM, OpenRouter, Cloudflare Workers AI, SiliconFlow vb.) yönlendirmeyi ve bunu kalıcı olarak `~/.zshrc`/`~/.bashrc`'a eklemeyi öneriyor. Bu, Claude Code'a girilen TÜM istekleri — kullanıcının tez taslakları, kaynak metinleri, akademik notları dahil — Anthropic'in kendi altyapısı yerine doğrulanamayan üçüncü taraf sağlayıcılara yönlendirmek anlamına gelir. Depo sadece dokümantasyon olduğu için "kurulmadı" sayılıyor, ama bu spesifik yapılandırma **veri gizliliği/güven modeli riski nedeniyle kullanıcıya önerilmeyecek**.
+4. **Kaynak güvenilirliği sınırlı doğrulanabildi** — "open-free-llm-api" organizasyonu az bilinen bir kaynak; depo ticari bir siteye (freellm.net) trafik yönlendiriyor. Kötü niyetli bir şey tespit edilmedi (MIT lisans, script yok) ama bağımsız doğrulama sınırlı.
+
+**Kullanıcı için not:** Akademik asistan dışındaki kişisel/geliştirme projeleri için ücretsiz LLM API'leri karşılaştırmak isterse bu depo/site bir başlangıç noktası olabilir; ancak Claude Code'un `ANTHROPIC_BASE_URL`/`ANTHROPIC_AUTH_TOKEN` değerlerini üçüncü taraf sağlayıcılara yönlendirmesi bu akademik asistan oturumu için önerilmez.
