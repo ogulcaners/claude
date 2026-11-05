@@ -25,3 +25,10 @@ Bu dosyalar `~/.claude/` altındaki canlı yapılandırmadan **manuel olarak kop
 
 - Bu depo bir uygulama/kod projesi değildir; içeriği Claude Code yapılandırma dosyalarından (Markdown) oluşur. Test/derleme adımı yoktur.
 - Yeni bir akademik skill eklerken önce `claude-config/AUDIT-REPORT-2026-07-17.md`'deki karar kayıtlarını kontrol et — daha önce değerlendirilip reddedilmiş bir bileşeni tekrar önermeden önce gerekçeyi gözden geçir.
+
+## MCP Sunucuları
+
+- `.mcp.json` — ElevenLabs resmî MCP sunucusu (`elevenlabs-mcp`, PyPI, yayıncı: ElevenLabs; sürüm sabitlendi: 0.12.2). `uvx` ile çalışır.
+  - API anahtarı depoya **yazılmaz**; `ELEVENLABS_API_KEY` ortam değişkeninden okunur (bulut ortam ayarlarında tanımlanmalı).
+  - Üretilen/okunan ses dosyaları `~/elevenlabs` dizinindedir (`ELEVENLABS_MCP_BASE_PATH`); bu dizin dışındaki dosyalar sunucu tarafından reddedilir.
+  - Sürüm yükseltirken yeni sürümü önce gözden geçir, sonra `args` içindeki sürümü güncelle.
