@@ -8,6 +8,10 @@
         "ELEVENLABS_MCP_BASE_PATH": "${HOME}/elevenlabs",
         "ELEVENLABS_MCP_OUTPUT_MODE": "files"
       }
+    },
+    "composio": {
+      "type": "http",
+      "url": "https://connect.composio.dev/mcp"
     }
   }
 }
