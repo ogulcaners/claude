@@ -56,9 +56,27 @@ claude mcp list   # composio listede görünmeli
 ```
 Instagram henüz bağlı değilse Claude Code'a yaz: «Instagram hesabımı Composio ile bağla.»
 
+## 4b. Composio'ya giriş: "GitHub ile devam et" hata veriyorsa
+
+Composio'nun giriş ekranı (`connect.composio.dev/login` → `login.composio.dev`, WorkOS AuthKit altyapısı) GitHub, Google ve e-posta ile giriş sunar. **GitHub yalnızca Composio hesabının kimliğidir; Instagram bağlantısıyla ilgisi yoktur.** GitHub butonu hata veriyorsa en hızlı çözüm aynı ekranda **e-posta** (tek kullanımlık kod / sihirli bağlantı) veya **Google** ile giriş yapmaktır; sonraki adımlar birebir aynıdır.
+
+GitHub ile ısrar edeceksen sırayla kontrol et:
+
+| # | Kontrol | Nasıl |
+|---|---|---|
+| 1 | GitHub e-postan doğrulanmış mı? | github.com → Settings → Emails: birincil adres "Verified" olmalı. Doğrulanmamış e-posta sosyal girişte en sık hata nedenidir. |
+| 2 | "Keep my email addresses private" açık mı? | Aynı sayfada bu seçenek açıksa GitHub, uygulamaya `noreply` adresi verir; bazı sağlayıcılar bunu reddeder. Geçici olarak kapat, giriş yap, sonra tekrar aç. |
+| 3 | Aynı e-postayla daha önce Google/e-posta ile Composio hesabı açtın mı? | "Account already exists" türü hata: o yöntemle gir (hesap zaten var). |
+| 4 | Açılır pencere / üçüncü taraf çerez engeli | Tarayıcının açılır pencere engelleyicisini bu site için kapat; gizli pencerede veya başka tarayıcıda dene. Brave/Safari'de "cross-site tracking" engeli OAuth dönüşünü kesebilir. |
+| 5 | GitHub tarafında yarım kalmış yetki | github.com → Settings → Applications → Authorized OAuth Apps: "Composio"/"WorkOS" varsa Revoke, sonra tekrar dene. |
+| 6 | Claude Code'da `/mcp` → Authenticate döngüde kalıyorsa | Tarayıcı, Claude Code'un çalıştığı makinede açılmalı (geri dönüş `localhost` adresine yapılır). Uzak/SSH ortamında çalışmaz. Bilinen bir Claude Code hatası (anthropics/claude-code #78612): tarayıcı "başarılı" dese de "needs authentication" kalabilir; `claude mcp remove composio` → `claude mcp add --transport http composio https://connect.composio.dev/mcp` → yeniden `/mcp`. |
+| 7 | Hâlâ hata | Hata metnini ve ekrandaki `ofid_...` referans kodunu support@composio.dev adresine gönder (Composio'nun resmi yönergesi). |
+
+Claude.ai tarafında "Couldn't reach the MCP server" / "Authorization with the MCP server failed" görürsen: URL'nin tam olarak `https://connect.composio.dev/mcp` olduğunu kontrol et, bağlayıcıyı kaldırıp yeniden ekle.
+
 ## 5. Bulut (claude.ai/code) oturumları
 
-Bulut oturumlarında dış ağ erişimi ortam politikasına bağlıdır. `connect.composio.dev` ve `backend.composio.dev` host'larına izin veren **claude-instagram** adlı kişisel ortam bu amaçla oluşturulmuştur; Instagram işi yapacağın bulut oturumlarını bu ortamda başlat. Varsayılan ortamda Composio bağlantısı "proxy 403" ile reddedilir.
+Bulut oturumlarında dış ağ erişimi ortam politikasına bağlıdır. **claude-instagram** adlı kişisel ortam şu host'lara izin verir: `connect.composio.dev` (MCP), `backend.composio.dev` (API), `login.composio.dev` (OAuth giriş/token). Instagram işi yapacağın bulut oturumlarını bu ortamda başlat. Varsayılan ortamda Composio bağlantısı "proxy 403" ile reddedilir. Doğrulama (06.11.2026): OAuth metadata, JWKS ve dinamik istemci kaydı bu ortamdan başarıyla yanıt veriyor; eksik olan tek adım kullanıcının tarayıcıdan yapacağı giriş.
 
 ## 6. Doğrulama (işe yaradığını nasıl anlarsın)
 

@@ -51,4 +51,4 @@ mkdir -p ~/.claude/agents && cp claude-config/agents/*.md ~/.claude/agents/
   - Sürüm yükseltirken yeni sürümü önce gözden geçir, sonra `args` içindeki sürümü güncelle.
 - `.mcp.json` — Composio barındırılan MCP sunucusu (`https://connect.composio.dev/mcp`, HTTP + OAuth). Instagram'ı resmi Meta Graph API üzerinden bağlar. Anahtar depoda tutulmaz; `/mcp` → composio → Authenticate ile tarayıcıdan giriş yapılır.
   - Composio **yazma** araçlarına (yayınlama, DM) sahiptir; `claude-config/CLAUDE.md`'deki onay kapısı kuralları bağlayıcıdır.
-  - Bulut oturumları için `claude-instagram` adlı kişisel ortam `connect.composio.dev` ve `backend.composio.dev` host'larına izin verir; varsayılan ortamda bu host'lar kapalıdır.
+  - Bulut oturumları için `claude-instagram` adlı kişisel ortam `connect.composio.dev`, `backend.composio.dev` ve `login.composio.dev` host'larına izin verir; varsayılan ortamda bu host'lar kapalıdır.
