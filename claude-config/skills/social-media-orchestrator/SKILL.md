@@ -71,6 +71,10 @@ TaskCreate/TaskUpdate ile aktif döngüyü takip edilebilir bir liste yap; kulla
 
 Bu klasörler `.gitignore`'dadır (kişisel veri ve taslak içerir).
 
+## Takvim tasarım kuralları
+
+Tempo = kapasite (kötü haftanın tabanına göre tasarla); slotların **%20-30'u esnek/tepkisel** (trend, anlık); 1-2 isimli seri ("Salı Söküm", "Cuma SSS"); ≥1 hafta tampon; hiçbir sütun slotların %40'ından fazlası değil; aynı gün iki ağır format yok; ağır formatlar Salı-Perşembe; kampanya gönderileri haftayı sabitler, iki tanıtım arasında bir "nefes" gönderisi. Ritim: aylık şekil / haftalık doldurma / günlük etkileşim; toplu üretim (batch) → boşalan zaman etkileşime gider.
+
 ## Kapı kontrolü: "aylık plan hazır" demeden önce
 
 1. Her gün için format + sütun + konu + kanca + CTA dolu mu?

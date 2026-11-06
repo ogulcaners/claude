@@ -35,6 +35,13 @@ Amaç: gelen kutusunu 15 dakikada temizlenebilir hale getirmek ve **her cevabı 
 ```
 Ardından her taslak ayrı blokta, numarasıyla. Kişisel verileri (telefon, adres, TC) özetle ("telefon numarası paylaşmış"), ham kopyalama.
 
+## Günlük etkileşim rutini (toplam ≤1 saat)
+
+- **Altın saat:** yayından sonraki ilk 15-20 dakika; orada olabileceğin saatte yayınla, her erken yoruma cevap ver ve bir soru geri sor.
+- Pencereler: sabah ~20 dk + öğleden sonra ~20 dk + altın saat turu. Sıra: yeni gönderilerin yorumları → DM'ler → olumsuz/acil → ICP/akran/lider gönderilerine 3-5 proaktif, özlü yorum (yasak açılışlar: "Harika paylaşım", "Çok doğru", isim + "!"; gönderiyi tekrar etme; satış yapma).
+- Haftalık 30 dk: bu haftanın 10-15 hesabını/konuşmasını seç; tekrar eden soruları içeriğe çevir.
+- Topluluk ritüelleri (topluluk hedefinde): haftalık sabit başlık ("haftanın kazanımları"), aylık soru-cevap/canlı, üye öne çıkarma (izinle), yeni üyeye ilk 48 saat için kolay bir ilk eylem. "Bir güçlü haftalık ritüel beş tek seferlik etkinlikten iyidir." KPI: aktif/geri dönen üye, üye-üye etkileşimi, cevap süresi; takipçi sayısı değil.
+
 ## Cevap yazım ilkeleri
 
 - İlk cümlede kişinin söylediğini yansıt (anlaşıldığını hissettir), ikinci cümlede sonraki adım.
