@@ -1,0 +1,168 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 7858d36..032b686 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -30,6 +30,9 @@ Game features, performance improvements, and bug fixes for NFS Carbon in the bro
+ - Stop pinch zoom, the long-press menu and page bounce from interrupting play on phones.
+ - Stop the game writing to its whole 2 GB memory area at start, which crashed iPhones and used about 1.8 GB more memory on every device.
+ - Render phones at a lower resolution and start fewer background workers on touch devices, to use less memory.
++- Treat an iPad like a phone whatever it has attached: with a trackpad or Magic Keyboard, Safari reports a fine pointer and a Macintosh user agent, which skipped the lower resolution, the smaller import buffers and the folder-picker check.
++- Wait for landscape on tablets too, not only on phones: a portrait iPad started the game in a portrait resolution for the whole session.
++- Say in the FAQ and README what an iPad or iPhone needs: Safari on iPadOS or iOS 26, a normal tab, landscape.
+ 
+ - Remove traffic from every race together and from all Drift and Canyon Drift races: each player's traffic exists in their own game alone.
+ - Keep other players' cars hidden until everyone has loaded, so nobody sits on the grid looking like a bot.
+diff --git a/README.md b/README.md
+index cd60133..0ce6421 100644
+--- a/README.md
++++ b/README.md
+@@ -18,6 +18,8 @@ The browser runtime uses WebAssembly and WebGPU. A Rust server connects players,
+ 
+ Open **[nfscrb.xyz](https://nfscrb.xyz)** in desktop Chrome or Edge with hardware acceleration enabled. Choose your player name, enable online play if you want company, and press **Play**.
+ 
++On an iPad or iPhone, open the same page in Safari on iPadOS or iOS 26 or newer (WebGPU arrived in Safari 26), in a normal tab rather than Private Browsing, and hold the device in landscape. Touch controls appear by themselves; a Bluetooth controller or keyboard also works. Game files are imported through **Manage game files** from the Files app.
++
+ For races with friends, choose **Online → Custom Match** inside the game. For free roam, use the same room name on the homepage.
+ 
+ ## What you can do
+diff --git a/source/kit/web/player/index.html b/source/kit/web/player/index.html
+index eb92af3..89b3388 100644
+--- a/source/kit/web/player/index.html
++++ b/source/kit/web/player/index.html
+@@ -362,17 +362,25 @@ async function gameId() {
+   return decodeURIComponent(parts[parts.length - 1] || "");
+ }
+ 
+-function phoneInPortrait() {
+-  return matchMedia("(pointer: coarse)").matches && Math.min(screen.width, screen.height) <= 600 && innerHeight > innerWidth;
++// iPadOS Safari asks for the desktop site by default, so its user agent says Macintosh, and with a
++// trackpad or Magic Keyboard attached its primary pointer is "fine": the touch count tells it apart.
++function iPadOS() {
++  return /iPad/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
++}
++// A phone or tablet held upright. The game reads its window size once, so a portrait iPad would
++// play the whole session in a portrait resolution; tablets wait for landscape like phones.
++function touchDeviceInPortrait() {
++  const handheld = navigator.maxTouchPoints > 0 && (matchMedia("(pointer: coarse)").matches || iPadOS());
++  return handheld && innerHeight > innerWidth;
+ }
+ 
+ async function waitForPhoneLandscape() {
+-  if (!phoneInPortrait()) return;
++  if (!touchDeviceInPortrait()) return;
+   startup("waiting for landscape orientation");
+-  status("Rotate your phone to landscape to start.");
++  status(iPadOS() ? "Rotate your iPad to landscape to start." : "Rotate your phone or tablet to landscape to start.");
+   await new Promise((resolve) => {
+     const check = () => {
+-      if (phoneInPortrait()) return;
++      if (touchDeviceInPortrait()) return;
+       removeEventListener("resize", check);
+       removeEventListener("orientationchange", check);
+       resolve();
+diff --git a/source/web/custom-install.js b/source/web/custom-install.js
+index 2595593..6682178 100644
+--- a/source/web/custom-install.js
++++ b/source/web/custom-install.js
+@@ -72,7 +72,11 @@ export function sha256() {
+   };
+ }
+ function phone() {
+-  try { return navigator.maxTouchPoints > 0 && !!globalThis.matchMedia?.('(pointer: coarse)').matches; } catch { return false; }
++  try {
++    // An iPad with a trackpad has a fine pointer and a Macintosh user agent; it still has a phone's tab memory.
++    const iPadOS = /iPad/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
++    return navigator.maxTouchPoints > 0 && (!!globalThis.matchMedia?.('(pointer: coarse)').matches || iPadOS);
++  } catch { return false; }
+ }
+ // Files up to this size use the browser's digest on one buffer; bigger ones are hashed in pieces.
+ const nativeHashLimit = () => tuning.nativeHashLimit ?? (phone() ? 4 * MiB : 32 * MiB);
+diff --git a/source/web/saves.js b/source/web/saves.js
+index fba0738..432a36b 100644
+--- a/source/web/saves.js
++++ b/source/web/saves.js
+@@ -1163,7 +1163,9 @@
+       if (file) run("Reading the backup…", () => restoreFile(file), { blocksPlay: true });
+     };
+     $(".sv-undo").onclick = () => run("Putting the save back…", undoRestore, { blocksPlay: true });
+-    if (matchMedia("(pointer: coarse)").matches) $(".sv-import-dir").hidden = true; // phones have no folder picker
++    // Phones and iPads have no folder picker (an iPad with a trackpad reports a fine pointer; its Safari says Macintosh).
++    if (matchMedia("(pointer: coarse)").matches || /iPad/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1))
++      $(".sv-import-dir").hidden = true;
+     $(".sv-import-dir").onclick = () => $(".sv-pick-dir").click();
+     $(".sv-import-file").onclick = () => $(".sv-pick-file").click();
+     $(".sv-pick-dir").onchange = () => {
+diff --git a/source/web/start.js b/source/web/start.js
+index 167b8f3..63cdfe1 100644
+--- a/source/web/start.js
++++ b/source/web/start.js
+@@ -1095,7 +1095,10 @@
+   // on hardware that has to keep the whole browser tab in memory. Read
+   // before the runtime starts, so the game only ever sees the capped value. iPhone and iPad take 1,
+   // the one ratio with a recorded Quick Race on a real iPhone (logs/iphone-lan-20261104).
+-  function isTouchDevice() { return navigator.maxTouchPoints > 0 && matchMedia("(pointer: coarse)").matches; }
++  // An iPad with a trackpad or Magic Keyboard reports a fine pointer, and its Safari asks for the
++  // desktop site (a Macintosh user agent): the touch count is what tells it from a Mac.
++  const iPadOS = () => /iPad/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
++  function isTouchDevice() { return navigator.maxTouchPoints > 0 && (matchMedia("(pointer: coarse)").matches || iPadOS()); }
+   function capPhoneResolution() {
+     if (!isTouchDevice()) return;
+     const apple = /iPhone|iPad|iPod/.test(navigator.userAgent) || navigator.platform === "MacIntel";
+diff --git a/source/web/touch.js b/source/web/touch.js
+index a4775d0..b379be0 100644
+--- a/source/web/touch.js
++++ b/source/web/touch.js
+@@ -377,7 +377,11 @@
+     group('dpad', [['up','Menu up',UP], ['left','Menu left',LEFT], ['right','Menu right',RIGHT], ['down','Menu down',DOWN]]),
+     group('confirm', [['back Back','Back',['Escape','Escape',27]], ['ok OK','Confirm',['Enter','Enter',13]]]),
+   ];
+-  const rotate = document.createElement('div'); rotate.className = 'ct-rotate'; rotate.textContent = 'Rotate your phone to landscape';
++  // iPadOS Safari: a Macintosh user agent by default, and a fine pointer with a trackpad attached.
++  const iPadOS = /iPad/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
++  const handheld = matchMedia('(pointer: coarse)').matches || iPadOS;
++  const rotate = document.createElement('div'); rotate.className = 'ct-rotate';
++  rotate.textContent = iPadOS ? 'Rotate your iPad to landscape' : 'Rotate your phone or tablet to landscape';
+   root.append(rotate);
+   document.body.append(root);
+ 
+@@ -587,7 +591,7 @@
+     const online = !blocked && !arranging && !!document.querySelector(BADGE);
+     show(onlineButton, online);
+     if (!online && !panel.hidden) showPanel(false);
+-    show(rotate, (driving || arranging) && portrait.matches && Math.min(screen.width, screen.height) <= 600);
++    show(rotate, (driving || arranging) && portrait.matches && handheld);
+     show(top, !blocked && !arranging);
+     // Only a restart note is worth a phone's row: the menu writes the same element for both.
+     if (globalThis.recompMenuOpen) for (const meta of document.querySelectorAll('.cm-set-meta:not([data-ct])')) {
+diff --git a/tools/site/faq.html b/tools/site/faq.html
+index 3557ba2..b1863a9 100644
+--- a/tools/site/faq.html
++++ b/tools/site/faq.html
+@@ -29,7 +29,9 @@
+  {"@type": "Question", "name": "How do I play with a friend?",
+   "acceptedAnswer": {"@type": "Answer", "text": "Switch on Play online on the home page. To drive the city together, both type the same Room name. To race, both choose Custom Match in the game's main menu, or add each other in EA Messenger (M) and send a game invite."}},
+  {"@type": "Question", "name": "What do I need to play?",
+-  "acceptedAnswer": {"@type": "Answer", "text": "A desktop or laptop computer with a recent Chrome or Edge, which support WebGPU, and a keyboard or a controller."}},
++  "acceptedAnswer": {"@type": "Answer", "text": "A desktop or laptop computer with a recent Chrome or Edge, which support WebGPU, and a keyboard or a controller. An iPad or iPhone works too: Safari on iPadOS or iOS 26 or newer, in a normal tab (not Private Browsing), held in landscape. On-screen controls appear by themselves; a Bluetooth controller or keyboard also works."}},
++ {"@type": "Question", "name": "Can I play on an iPad?",
++  "acceptedAnswer": {"@type": "Answer", "text": "Yes. Update to iPadOS 26 or newer (WebGPU arrived in Safari 26), open nfscrb.xyz in Safari itself rather than inside another app, in a normal tab, and hold the iPad in landscape. Import your Carbon 1.4 files through Manage game files from the Files app. An iPad with little memory may stop at loading: close other tabs and apps and try again."}},
+  {"@type": "Question", "name": "Can I use a controller?",
+   "acceptedAnswer": {"@type": "Answer", "text": "Yes. PS5, PS4 and Xbox controllers work in races and in the game's menus. Press any button to start; the touchpad opens the settings menu. Change buttons in the game under Options, Controls."}},
+  {"@type": "Question", "name": "Do I need an EA account?",
+@@ -73,7 +75,15 @@
+       server, so they are there next time you play.</p>
+ 
+     <h3>What do I need to play?</h3>
+-    <p>A desktop or laptop computer with a recent Chrome or Edge, which support WebGPU, and a keyboard or a controller.</p>
++    <p>A desktop or laptop computer with a recent Chrome or Edge, which support WebGPU, and a keyboard or a controller.
++      An iPad or iPhone works too: Safari on iPadOS or iOS 26 or newer, in a normal tab (not Private Browsing), held in
++      landscape. On-screen controls appear by themselves; a Bluetooth controller or keyboard also works.</p>
++
++    <h3>Can I play on an iPad?</h3>
++    <p>Yes. Update to iPadOS 26 or newer (WebGPU arrived in Safari 26), open the game in Safari itself rather than
++      inside another app, in a normal tab, and hold the iPad in landscape. Import your Carbon 1.4 files through
++      <b>Manage game files</b> from the Files app. An iPad with little memory may stop at loading: close other tabs
++      and apps and try again.</p>
+ 
+     <h3>Can I use a controller?</h3>
+     <p>Yes. PS5, PS4 and Xbox controllers work in races and in the game's menus: press any button once the game
