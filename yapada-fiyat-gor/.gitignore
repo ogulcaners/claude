@@ -1,0 +1,7 @@
+node_modules/
+.wrangler/
+sync/config.json
+sync/urunler.json
+*.log
+.dev.vars
+__pycache__/

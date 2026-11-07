@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Yapada Fiyat Gör</title>
+<meta name="description" content="Yapada Dükkan ürünlerinin barkodunu telefon kameranızla okutun, güncel fiyatı ve stok durumunu anında görün.">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+/* Yapada "dark luxury" paleti (vitrin ile aynı tokenlar). Tek sütun, telefon öncelikli;
+   üstte kamera kadrajı, altında fiyat kartı. Dark-first; açık tema ikinci. */
+:root {
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --surface-2: #1c1c1c;
+  --line: #262626;
+  --fg: #f5f5f5;
+  --muted: #a3a3a3;
+  --faint: #525252;
+  --accent: #f59e0b;
+  --accent-ink: #1a1200;
+  --accent-dim: #78350f;
+  --ok: #10b981;
+  --warn: #fbbf24;
+  --bad: #ef4444;
+  --font: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --radius: 18px;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #faf7f2; --surface: #ffffff; --surface-2: #f3efe7; --line: #e6e0d4;
+    --fg: #161616; --muted: #5f5a52; --faint: #a39d93;
+    --accent: #d97706; --accent-ink: #1a1200; --accent-dim: #fde7c2;
+    --ok: #059669; --warn: #b45309; --bad: #dc2626;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #faf7f2; --surface: #ffffff; --surface-2: #f3efe7; --line: #e6e0d4;
+  --fg: #161616; --muted: #5f5a52; --faint: #a39d93;
+  --accent: #d97706; --accent-ink: #1a1200; --accent-dim: #fde7c2;
+  --ok: #059669; --warn: #b45309; --bad: #dc2626;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font);
+  font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  background: var(--bg); z-index: 10;
+}
+.wrap {
+  max-width: 480px; margin: 0 auto; min-height: 100%;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 32px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+header {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--bg); display: flex; align-items: baseline; justify-content: space-between;
+  padding-block: 14px 8px; border-bottom: 1px solid var(--line);
+}
+.brand { font-weight: 700; letter-spacing: .18em; font-size: 15px; text-transform: uppercase; }
+.brand small { display: block; letter-spacing: .02em; text-transform: none; font-weight: 500; color: var(--muted); font-size: 12px; margin-top: 2px; }
+.durum { font-size: 11px; color: var(--faint); text-align: right; font-variant-numeric: tabular-nums; }
+
+.banner {
+  display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 12px;
+  background: var(--accent-dim); color: var(--fg); font-size: 13px; border: 1px solid var(--line);
+}
+.banner strong { color: var(--accent); }
+
+/* Kamera kadrajı */
+.tarayici {
+  position: relative; border-radius: var(--radius); overflow: hidden; background: var(--surface);
+  border: 1px solid var(--line); aspect-ratio: 4 / 3; max-width: 100%;
+  display: grid; place-items: center;
+}
+.tarayici #okuyucu { width: 100%; height: 100%; }
+.tarayici #okuyucu video { width: 100% !important; height: 100% !important; object-fit: cover; display: block; }
+.tarayici .bos { text-align: center; padding: 24px; color: var(--muted); font-size: 14px; max-width: 30ch; }
+.tarayici .bos svg { display: block; margin: 0 auto 10px; width: 44px; height: 44px; stroke: var(--accent); fill: none; stroke-width: 1.6; }
+.kadraj { position: absolute; inset: 0; pointer-events: none; }
+.kadraj::before, .kadraj::after, .kadraj i::before, .kadraj i::after {
+  content: ""; position: absolute; width: 28px; height: 28px; border: 3px solid var(--accent);
+}
+.kadraj::before { left: 18%; top: 26%; border-right: 0; border-bottom: 0; border-radius: 6px 0 0 0; }
+.kadraj::after { right: 18%; top: 26%; border-left: 0; border-bottom: 0; border-radius: 0 6px 0 0; }
+.kadraj i::before { left: 18%; bottom: 26%; border-right: 0; border-top: 0; border-radius: 0 0 0 6px; }
+.kadraj i::after { right: 18%; bottom: 26%; border-left: 0; border-top: 0; border-radius: 0 0 6px 0; }
+.cizgi { position: absolute; left: 20%; right: 20%; top: 50%; height: 2px; background: var(--accent); opacity: .8; box-shadow: 0 0 12px var(--accent); }
+@media (prefers-reduced-motion: no-preference) {
+  .taraniyor .cizgi { animation: tara 2.2s ease-in-out infinite; }
+  @keyframes tara { 0%,100% { top: 30%; } 50% { top: 70%; } }
+}
+
+.araclar { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn {
+  appearance: none; border: 0; cursor: pointer; font: inherit; font-weight: 600;
+  border-radius: 999px; padding: 12px 18px; display: inline-flex; align-items: center; gap: 8px;
+  transition: transform .08s ease, background .15s ease;
+}
+.btn:active { transform: scale(.98); }
+.btn:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn-birincil { background: var(--accent); color: var(--accent-ink); flex: 1 1 auto; justify-content: center; }
+.btn-ikincil { background: var(--surface-2); color: var(--fg); border: 1px solid var(--line); }
+.btn[disabled] { opacity: .5; cursor: default; }
+.btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+.manuel { display: flex; gap: 8px; }
+.manuel input {
+  flex: 1 1 auto; min-width: 0; font: inherit; font-size: 16px; padding: 12px 14px; border-radius: 12px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--fg); letter-spacing: .06em;
+  font-variant-numeric: tabular-nums;
+}
+.manuel input::placeholder { color: var(--faint); letter-spacing: 0; }
+
+/* Sonuç kartı */
+.kart {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 16px; display: grid; grid-template-columns: 84px 1fr; gap: 14px; align-items: start;
+}
+.kart[hidden] { display: none; }
+.resim {
+  width: 84px; height: 84px; border-radius: 14px; background: var(--surface-2); display: grid; place-items: center;
+  overflow: hidden; font-weight: 700; font-size: 28px; color: var(--accent); border: 1px solid var(--line);
+}
+.resim img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bilgi { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.etiket { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+.ad { font-weight: 600; font-size: 16px; line-height: 1.3; text-wrap: balance; margin: 0; }
+.fiyat-satir { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.fiyat { font-size: 30px; font-weight: 700; letter-spacing: -.01em; font-variant-numeric: tabular-nums; color: var(--accent); line-height: 1.1; }
+.fiyat small { font-size: 12px; font-weight: 500; color: var(--muted); letter-spacing: 0; }
+.cipler { display: flex; gap: 6px; flex-wrap: wrap; }
+.cip { font-size: 12px; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); color: var(--muted); }
+.cip.var { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
+.cip.az { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 40%, transparent); }
+.cip.tukendi { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 40%, transparent); }
+.cip::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: currentColor; margin-right: 6px; vertical-align: 1px; }
+.cip.notr::before { display: none; }
+.kart-alt { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 12px; margin-top: 2px; }
+.kart-alt .meta { font-size: 12px; color: var(--faint); font-variant-numeric: tabular-nums; }
+.kart-alt a { color: var(--accent); font-weight: 600; text-decoration: none; font-size: 14px; }
+
+.mesaj {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.mesaj[hidden] { display: none; }
+.mesaj .ikon { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; flex: 0 0 auto; background: var(--surface-2); font-weight: 700; }
+.mesaj.hata .ikon { color: var(--bad); }
+.mesaj.bilgi .ikon { color: var(--accent); }
+.mesaj h3 { margin: 0 0 2px; font-size: 15px; }
+.mesaj p { margin: 0; color: var(--muted); font-size: 14px; }
+
+.son { display: flex; flex-direction: column; gap: 8px; }
+.son h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin: 6px 0 0; font-weight: 600; }
+.son ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.son li button {
+  width: 100%; text-align: left; font: inherit; color: var(--fg); background: var(--surface); border: 1px solid var(--line);
+  border-radius: 12px; padding: 10px 12px; display: flex; justify-content: space-between; gap: 10px; cursor: pointer;
+}
+.son li button span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.son li button span:last-child { color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; flex: 0 0 auto; }
+.ornekler { display: flex; gap: 6px; flex-wrap: wrap; }
+.ornekler button { font: inherit; font-size: 12px; cursor: pointer; background: var(--surface-2); color: var(--fg); border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px; }
+footer { color: var(--faint); font-size: 12px; text-align: center; padding-top: 8px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+</head>
+<body>
+<script>
+  // Site yapılandırması. api boş bırakılırsa sayfa aynı kaynaktaki /api yollarını kullanır.
+  window.FIYATGOR = {
+    api: "",
+    demo: false,
+    siteArama: "https://www.yapadadukkan.com/arama?q={q}",
+    magazaAdi: "Yapada Dükkan · Margi Outlet, Edirne"
+  };
+</script>
+<div class="wrap">
+  <header>
+    <div class="brand">Yapada<small>Fiyat Gör</small></div>
+    <div class="durum" id="durum" aria-live="polite"></div>
+  </header>
+
+  <div class="banner" id="demoBanner" hidden>
+    <span>🧪</span>
+    <div><strong>Örnek veri.</strong> Bu önizleme sahte bir ürün listesi kullanır. Gerçek sitede kamera açılır ve Wolvox'tan gelen güncel fiyatlar gösterilir.</div>
+  </div>
+
+  <section class="tarayici" id="tarayici" aria-label="Barkod okuyucu">
+    <div id="okuyucu" hidden></div>
+    <div class="bos" id="kameraBos">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M7 9v6M10 9v6M13 9v6M16 9v6"/></svg>
+      <span id="kameraMetin">Ürünün barkodunu kameraya gösterin, fiyatı ve stok durumu anında gelsin.</span>
+    </div>
+    <div class="kadraj" id="kadraj" hidden><i></i><div class="cizgi"></div></div>
+  </section>
+
+  <div class="araclar">
+    <button class="btn btn-birincil" id="btnKamera" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L17 6h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.5"/></svg>
+      <span>Barkodu okut</span>
+    </button>
+    <button class="btn btn-ikincil" id="btnDurdur" type="button" hidden>Durdur</button>
+  </div>
+
+  <form class="manuel" id="formManuel" autocomplete="off">
+    <label class="sr" for="barkodGiris">Barkod numarası</label>
+    <input id="barkodGiris" name="barkod" inputmode="numeric" pattern="[0-9A-Za-z ]*" placeholder="veya barkodu yazın" aria-label="Barkod numarası">
+    <button class="btn btn-ikincil" type="submit">Sorgula</button>
+  </form>
+
+  <div class="ornekler" id="ornekler" hidden></div>
+
+  <article class="kart" id="kart" hidden aria-live="polite">
+    <div class="resim" id="resim"></div>
+    <div class="bilgi">
+      <div class="etiket" id="markaGrup"></div>
+      <h2 class="ad" id="ad"></h2>
+      <div class="fiyat-satir"><div class="fiyat" id="fiyat"></div><small id="kdv" style="color:var(--muted);font-size:12px"></small></div>
+      <div class="cipler"><span class="cip" id="stok"></span><span class="cip notr" id="barkodCip"></span></div>
+    </div>
+    <div class="kart-alt">
+      <span class="meta" id="guncel"></span>
+      <a id="siteLink" href="#" target="_blank" rel="noopener">Sitede gör →</a>
+    </div>
+  </article>
+
+  <div class="mesaj" id="mesaj" hidden>
+    <div class="ikon" id="mesajIkon">!</div>
+    <div><h3 id="mesajBaslik"></h3><p id="mesajMetin"></p></div>
+  </div>
+
+  <section class="son" id="son" hidden>
+    <h2>Son baktıklarınız</h2>
+    <ul id="sonListe"></ul>
+  </section>
+
+  <footer id="altyazi"></footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+<script>
+(function () {
+  "use strict";
+  var CFG = window.FIYATGOR || {};
+  var API = (CFG.api || "").replace(/\/$/, "");
+  var $ = function (id) { return document.getElementById(id); };
+
+  // --- Örnek katalog (yalnızca demo modunda) ---------------------------------
+  var DEMO = {
+    "887961953404": { ad: "Hot Wheels Tekli Araba Nissan Skyline GT-R (R34)", marka: "Hot Wheels", grup: "Koleksiyon", fiyat: 149.9, kdv_orani: 20, stok: { kod: "var", metin: "Stokta" } },
+    "4895183661317": { ad: "Mini GT 1:64 Porsche 911 GT3 RS Shark Blue", marka: "Mini GT", grup: "Koleksiyon", fiyat: 899, kdv_orani: 20, stok: { kod: "az", metin: "Son 2 adet" } },
+    "889698712019": { ad: "Funko Pop! Marvel Spider-Man No Way Home #1160", marka: "Funko", grup: "Koleksiyon", fiyat: 749, kdv_orani: 20, stok: { kod: "tukendi", metin: "Tükendi" } },
+    "8018190034578": { ad: "Panini FIFA World Cup 2026 Sticker Kutusu (50 paket)", marka: "Panini", grup: "Kırtasiye", fiyat: 1875, kdv_orani: 20, stok: { kod: "var", metin: "Stokta" } },
+    "4005401104230": { ad: "Faber-Castell Grip 2001 Kurşun Kalem B", marka: "Faber-Castell", grup: "Kırtasiye", fiyat: 29.5, kdv_orani: 20, stok: { kod: "var", metin: "Stokta" } }
+  };
+
+  // --- Yardımcılar -----------------------------------------------------------
+  function temizle(b) { return String(b || "").replace(/[^0-9A-Za-z]/g, ""); }
+  function fiyatBicim(f, para) {
+    if (f === null || f === undefined) return "Fiyat sorunuz";
+    var kur = (para || "TRY").toUpperCase();
+    if (kur === "TL") kur = "TRY";
+    try { return new Intl.NumberFormat("tr-TR", { style: "currency", currency: kur, minimumFractionDigits: 2 }).format(f); }
+    catch (e) { return f.toFixed(2).replace(".", ",") + " " + kur; }
+  }
+  function zamanBicim(iso) {
+    if (!iso) return "";
+    var d = new Date(iso); if (isNaN(d)) return "";
+    return d.toLocaleString("tr-TR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+  }
+  function goster(el, acik) { el.hidden = !acik; }
+
+  // --- Son baktıkları (yalnızca bu cihazda) ----------------------------------
+  var SON_ANAHTAR = "yapada-fiyatgor-son";
+  function sonOku() { try { return JSON.parse(localStorage.getItem(SON_ANAHTAR) || "[]"); } catch (e) { return []; } }
+  function sonYaz(liste) { try { localStorage.setItem(SON_ANAHTAR, JSON.stringify(liste.slice(0, 8))); } catch (e) {} }
+  function sonEkle(u) {
+    var liste = sonOku().filter(function (x) { return x.barkod !== u.barkod; });
+    liste.unshift({ barkod: u.barkod, ad: u.ad, fiyat: u.fiyat, para_birimi: u.para_birimi });
+    sonYaz(liste); sonCiz();
+  }
+  function sonCiz() {
+    var liste = sonOku(); var ul = $("sonListe"); ul.innerHTML = "";
+    goster($("son"), liste.length > 0);
+    liste.forEach(function (x) {
+      var li = document.createElement("li"); var b = document.createElement("button"); b.type = "button";
+      var s1 = document.createElement("span"); s1.textContent = x.ad;
+      var s2 = document.createElement("span"); s2.textContent = fiyatBicim(x.fiyat, x.para_birimi);
+      b.appendChild(s1); b.appendChild(s2);
+      b.addEventListener("click", function () { sorgula(x.barkod); });
+      li.appendChild(b); ul.appendChild(li);
+    });
+  }
+
+  // --- Sonuç gösterimi -------------------------------------------------------
+  function mesajGoster(tur, baslik, metin) {
+    var m = $("mesaj"); m.className = "mesaj " + tur;
+    $("mesajIkon").textContent = tur === "hata" ? "!" : "i";
+    $("mesajBaslik").textContent = baslik; $("mesajMetin").textContent = metin;
+    goster(m, true); goster($("kart"), false);
+  }
+  function urunGoster(u) {
+    goster($("mesaj"), false);
+    var r = $("resim"); r.innerHTML = "";
+    if (u.resim_url) { var img = document.createElement("img"); img.alt = ""; img.src = u.resim_url; img.onerror = function () { r.innerHTML = ""; r.textContent = (u.ad || "?").charAt(0); }; r.appendChild(img); }
+    else { r.textContent = (u.ad || "?").charAt(0).toUpperCase(); }
+    $("markaGrup").textContent = [u.marka, u.grup].filter(Boolean).join(" · ") || "Ürün";
+    $("ad").textContent = u.ad;
+    $("fiyat").textContent = fiyatBicim(u.fiyat, u.para_birimi);
+    $("kdv").textContent = u.fiyat !== null && u.fiyat !== undefined ? "KDV dahil" : "";
+    var s = $("stok");
+    if (u.stok && u.stok.kod) { s.className = "cip " + u.stok.kod; s.textContent = u.stok.metin; s.hidden = false; }
+    else { s.hidden = true; }
+    $("barkodCip").textContent = u.barkod;
+    $("guncel").textContent = u.guncelleme ? "Güncelleme " + zamanBicim(u.guncelleme) : "";
+    var link = $("siteLink");
+    if (CFG.siteArama) { link.href = CFG.siteArama.replace("{q}", encodeURIComponent(u.barkod)); link.hidden = false; } else { link.hidden = true; }
+    goster($("kart"), true);
+    sonEkle(u);
+    try { if (navigator.vibrate) navigator.vibrate(40); } catch (e) {}
+  }
+
+  // --- Sorgu -----------------------------------------------------------------
+  var sonSorgu = { barkod: "", zaman: 0 };
+  function sorgula(ham) {
+    var barkod = temizle(ham);
+    if (barkod.length < 4) { mesajGoster("hata", "Barkod çok kısa", "En az 4 karakter girin ya da kamerayla okutun."); return; }
+    var simdi = Date.now();
+    if (barkod === sonSorgu.barkod && simdi - sonSorgu.zaman < 2500) return;
+    sonSorgu = { barkod: barkod, zaman: simdi };
+    $("barkodGiris").value = barkod;
+    mesajGoster("bilgi", "Aranıyor…", barkod);
+
+    if (CFG.demo) {
+      setTimeout(function () {
+        var u = DEMO[barkod] || DEMO[barkod.replace(/^0+/, "")];
+        if (u) { urunGoster(Object.assign({ barkod: barkod, para_birimi: "TRY", guncelleme: new Date().toISOString() }, u)); }
+        else { bulunamadi(barkod); }
+      }, 350);
+      return;
+    }
+    fetch(API + "/api/urun?barkod=" + encodeURIComponent(barkod), { headers: { Accept: "application/json" } })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, status: r.status, j: j }; }); })
+      .then(function (res) {
+        if (res.ok) urunGoster(res.j);
+        else if (res.status === 404) bulunamadi(barkod);
+        else mesajGoster("hata", "Şu an yanıt alınamadı", "Birkaç saniye sonra yeniden deneyin ya da kasadan sorun.");
+      })
+      .catch(function () {
+        mesajGoster("hata", "Bağlantı yok", navigator.onLine ? "Sunucuya ulaşılamadı. Yeniden deneyin." : "İnternet bağlantınız kapalı görünüyor.");
+      });
+  }
+  function bulunamadi(barkod) {
+    mesajGoster("hata", "Bu barkod listemizde yok", barkod + " için kayıt bulunamadı. Ürün yeni gelmiş olabilir; kasada fiyatını hemen öğrenebilirsiniz.");
+  }
+
+  // --- Kamera ----------------------------------------------------------------
+  var okuyucu = null; var taraniyor = false;
+  var kameraVar = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) && typeof Html5Qrcode !== "undefined" && !CFG.demo;
+  function kameraBaslat() {
+    if (!kameraVar) return;
+    var F = window.Html5QrcodeSupportedFormats || {};
+    var formatlar = [F.EAN_13, F.EAN_8, F.UPC_A, F.UPC_E, F.CODE_128, F.CODE_39, F.ITF, F.QR_CODE].filter(function (x) { return x !== undefined; });
+    okuyucu = okuyucu || new Html5Qrcode("okuyucu", { formatsToSupport: formatlar.length ? formatlar : undefined, verbose: false });
+    goster($("okuyucu"), true); goster($("kameraBos"), false); goster($("kadraj"), true);
+    $("tarayici").classList.add("taraniyor");
+    $("btnKamera").disabled = true; goster($("btnDurdur"), true);
+    okuyucu.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: function (w, h) { return { width: Math.round(w * 0.78), height: Math.round(h * 0.42) }; }, aspectRatio: 1.3333 },
+      function (metin) { kameraDurdur(); sorgula(metin); },
+      function () {}
+    ).then(function () { taraniyor = true; })
+     .catch(function (err) {
+       kameraSifirla();
+       var m = String(err && err.message ? err.message : err);
+       var neden = /NotAllowed|Permission/i.test(m) ? "Kamera izni verilmedi. Tarayıcı ayarlarından izin verip tekrar deneyin."
+                 : /NotFound|no camera|Requested device/i.test(m) ? "Bu cihazda kullanılabilir kamera bulunamadı."
+                 : "Kamera açılamadı. Barkodu elle yazabilirsiniz.";
+       mesajGoster("hata", "Kamera kullanılamıyor", neden);
+     });
+  }
+  function kameraSifirla() {
+    taraniyor = false;
+    goster($("okuyucu"), false); goster($("kameraBos"), true); goster($("kadraj"), false);
+    $("tarayici").classList.remove("taraniyor");
+    $("btnKamera").disabled = false; goster($("btnDurdur"), false);
+    $("btnKamera").querySelector("span").textContent = "Tekrar okut";
+  }
+  function kameraDurdur() {
+    if (okuyucu && taraniyor) { okuyucu.stop().then(kameraSifirla).catch(kameraSifirla); } else { kameraSifirla(); }
+  }
+  document.addEventListener("visibilitychange", function () { if (document.hidden && taraniyor) kameraDurdur(); });
+
+  // --- Başlat ----------------------------------------------------------------
+  $("btnKamera").addEventListener("click", kameraBaslat);
+  $("btnDurdur").addEventListener("click", kameraDurdur);
+  $("formManuel").addEventListener("submit", function (e) { e.preventDefault(); sorgula($("barkodGiris").value); });
+  $("altyazi").textContent = CFG.magazaAdi || "";
+  sonCiz();
+
+  if (CFG.demo) {
+    goster($("demoBanner"), true);
+    var o = $("ornekler"); goster(o, true);
+    Object.keys(DEMO).forEach(function (b) {
+      var btn = document.createElement("button"); btn.type = "button"; btn.textContent = DEMO[b].marka + " · " + b;
+      btn.addEventListener("click", function () { sorgula(b); }); o.appendChild(btn);
+    });
+    $("kameraMetin").textContent = "Önizlemede kamera kapalı. Aşağıdaki örnek barkodlara dokunun ya da elle yazın.";
+    $("btnKamera").disabled = true; $("btnKamera").querySelector("span").textContent = "Kamera (gerçek sitede)";
+    $("durum").textContent = "Örnek veri";
+  } else {
+    if (!kameraVar) {
+      $("btnKamera").disabled = true;
+      $("kameraMetin").textContent = location.protocol === "https:" ? "Bu tarayıcıda kamera kullanılamıyor. Barkodu aşağıya yazın." : "Kamera yalnızca güvenli (https) bağlantıda açılır. Barkodu aşağıya yazın.";
+    }
+    fetch(API + "/api/durum", { headers: { Accept: "application/json" } })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (d && d.son_senkron) $("durum").textContent = "Fiyatlar " + zamanBicim(d.son_senkron) + " itibarıyla"; })
+      .catch(function () {});
+  }
+  var ilk = new URLSearchParams(location.search).get("barkod");
+  if (ilk) sorgula(ilk);
+})();
+</script>
+</body>
+</html>

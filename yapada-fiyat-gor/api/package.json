@@ -1,0 +1,16 @@
+{
+  "name": "yapada-fiyat-gor-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Yapada Fiyat Gör — Cloudflare Worker API ve müşteri sayfası",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --local",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 execute yapada-fiyat-gor --local --file schema.sql",
+    "db:remote": "wrangler d1 execute yapada-fiyat-gor --remote --file schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4.42.0"
+  }
+}

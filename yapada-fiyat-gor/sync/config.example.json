@@ -1,0 +1,23 @@
+{
+  "wolvox": {
+    "host": "127.0.0.1",
+    "port": 3056,
+    "kullanici": "SYSDBA",
+    "parola": "WOLVOX_KULLANICI_PAROLASI",
+    "dev_code": "AKINSOFT_GELISTIRICI_KODU",
+    "dev_pass": "AKINSOFT_GELISTIRICI_PAROLASI",
+    "sirket_kodu": "YAPADA",
+    "calisma_yili": "2026",
+    "sube_kodu": "",
+    "stok_ek_sart": " AND STOK.AKTIF=1",
+    "fiyat_no": 1,
+    "fiyat_kdv_dahil": true,
+    "envanter_cek": true
+  },
+  "api": {
+    "url": "https://fiyat.yapadadukkan.com",
+    "token": "UZUN_RASTGELE_GIZLI_ANAHTAR",
+    "paket_boyutu": 500,
+    "resim_url_sablonu": ""
+  }
+}

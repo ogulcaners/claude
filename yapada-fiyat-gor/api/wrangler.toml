@@ -1,0 +1,21 @@
+name = "yapada-fiyat-gor"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+
+# Müşteriye açık sayfa (web/ klasörü) aynı Worker'dan sunulur; /api/* Worker koduna düşer.
+[assets]
+directory = "../web"
+not_found_handling = "single-page-application"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "yapada-fiyat-gor"
+database_id = "BURAYA_D1_DATABASE_ID"   # `npx wrangler d1 create yapada-fiyat-gor` çıktısından
+
+[vars]
+# Virgülle ayrılmış izinli kaynaklar (sayfa başka alan adından çağıracaksa). Boş = yalnız aynı kaynak.
+ALLOWED_ORIGINS = "https://www.yapadadukkan.com,https://yapadadukkan.com"
+# Stok çipinde "Son N adet" eşiği
+AZ_STOK_ESIGI = "3"
+
+# SYNC_TOKEN gizli olarak eklenir:  npx wrangler secret put SYNC_TOKEN
