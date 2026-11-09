@@ -20,7 +20,9 @@ Kullanıcı profili: İşletme Anabilim Dalı — **Yönetim ve Organizasyon** y
 
 ## Senkronizasyon
 
-Bu dosyalar `~/.claude/` altındaki canlı yapılandırmadan **manuel olarak kopyalanmıştır** (otomatik senkronizasyon yoktur). `~/.claude/` altında yeni bir skill eklenir veya CLAUDE.md güncellenirse, bu depodaki `claude-config/` kopyasının da güncellenmesi ve commit edilmesi gerekir.
+Bu dosyalar `~/.claude/` altındaki canlı yapılandırmadan **manuel olarak kopyalanmıştır** (otomatik senkronizasyon yoktur).
+
+**Geri yükleme (depo → `~/.claude/`) otomatiktir:** bulut ortamının ("claude-instagram") kurulum betiği her yeni kapsayıcıda `claude-config/CLAUDE.md` dosyasını `~/.claude/CLAUDE.md`'ye, `claude-config/skills/*` klasörlerini `~/.claude/skills/` altına kopyalar. Ters yön (canlı → depo) hâlâ manueldir; bu yüzden aşağıdaki kural geçerlidir. `~/.claude/` altında yeni bir skill eklenir veya CLAUDE.md güncellenirse, bu depodaki `claude-config/` kopyasının da güncellenmesi ve commit edilmesi gerekir.
 
 ## Bu Depoda Çalışırken
 
