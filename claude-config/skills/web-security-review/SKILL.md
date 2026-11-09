@@ -32,7 +32,7 @@ ECC'nin `security-reviewer` ajanı ve `security-review` skill'indeki OWASP kontr
 
 ### 1. Kimlik doğrulama ve oturum
 - [ ] `login`, `logout`, `status` dışındaki **her** `/api/*` route oturum istiyor mu? Yönetici route'ları rol kontrolü yapıyor mu?
-- [ ] PIN/şifre: **varsayılan veya ortak değer yok** (ör. herkese `1234` → CRITICAL). Yönetici hesabı en az 8 haneli/ayrı güçlü sır.
+- [ ] PIN/şifre: **varsayılan veya ortak değer yok** (ör. `0000`, `1234` gibi tahmin edilebilir değerler → CRITICAL). Yönetici hesabı en az 8 haneli/ayrı güçlü sır.
 - [ ] PIN/şifre özetleri `wrangler.jsonc` `vars` içinde **değil**, `wrangler secret put` ile. `vars` git'e girer; 4–6 haneli PIN'in PBKDF2 özeti çevrimdışı saniyeler içinde kırılır.
 - [ ] Karşılaştırma sabit zamanlı; olmayan hesapta da aynı iş yapılıyor.
 - [ ] Deneme sınırı: IP başına **ve** hesap başına; ama hesap kilidi doğru PIN'i de engelliyorsa saldırgan şubeyi kilitleyebilir (DoS) → kilidi hesap+IP'ye bağla veya doğru PIN'i geçir. IPv6'da /64 bazında say. Sayaç kayıtlarının süresi dolsun.
