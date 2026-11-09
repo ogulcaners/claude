@@ -38,3 +38,10 @@ Not: `citation-style-language/styles` deposundaki `apa.csl` (ve Türkçe için `
 - Kullanıcıyla akademik konularda **Türkçe** iletişim kur (aksi istenmedikçe); literatür taramasında anahtar kelimeleri hem Türkçe hem İngilizce oluştur.
 - Kod/teknik konularda proje kurallarına (varsa proje CLAUDE.md) öncelik ver.
 - Üçüncü taraf skill/MCP sunucusu kurulumu önerilmeden önce her zaman bir güvenlik değerlendirmesi yap (kaynak, bakım durumu, istenen izinler/API anahtarları, kod inceleme) — bkz. proje kökündeki `CLAUDE.md` içindeki 2026-07-17 tarihli denetim kaydı ve `memory/setup-decisions.md`.
+
+# Web Projeleri Güvenlik Kuralı (Yapada siteleri ve tüm yeni web işleri)
+
+- Yeni site, endpoint, giriş/oturum/PIN/token kodu, müşteri verisi, `wrangler.jsonc`, `_headers` veya GitHub Actions değişikliğinde ve **her canlı yayından önce** `web-security-review` skill'ini uygula.
+- Varsayılan/ortak şifre veya PIN önerme ve kurma; sırları `wrangler secret` ile tut, `vars`'a yazma.
+- `pull_request` tetikli CI işlerine secret verme; action'ları SHA'ya sabitle.
+- Denetim raporları açık kaynak bu depoya konmaz (depo public); kullanıcıdan son raporu iste ve açık maddeleri önce kontrol et. İlk denetim: 2026-11-09.

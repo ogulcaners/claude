@@ -43,3 +43,10 @@ Hiçbir üçüncü taraf skill veya MCP sunucusu bu oturumda kurulmadı. Gerekç
 
 - Kendi bilgisayarında Zotero kullanıyorsa: `54yyyu/zotero-mcp` kurulabilir (Zotero masaüstü + "Allow other applications..." ayarı gerekir).
 - Word/PDF üretimi için Anthropic'in resmi `docx`/`pdf`/`doc-coauthoring` skill'leri `/plugin marketplace add anthropics/skills` ve `/plugin install document-skills@anthropic-agent-skills` ile kurulabilir.
+
+## Ek Karar — 2026-11-09: affaan-m/everything-claude-code (ECC)
+
+- **Kaynak:** github.com/affaan-m/everything-claude-code, v2.2.3, commit `d2ef268` (2026-11-06), MIT lisansı.
+- **İncelenen:** `agents/security-reviewer.md`, `skills/security-review/SKILL.md`, `rules/common/security.md`, `rules/web/security.md` — salt Markdown; betik, ağ çağrısı, API anahtarı isteği yok.
+- **Karar:** Deponun tamamı (hook'lar, `install.sh`, MCP yapılandırmaları, yüzlerce skill) **kurulmadı** — kapsamı çok geniş ve hook'lar her araç çağrısında kod çalıştırır. Yalnızca güvenlik kontrol listesi içeriği alınıp kullanıcının yığınına (Cloudflare Workers/DO/D1, PWA, GitHub Actions, Windows ajanı) uyarlanarak `skills/web-security-review` olarak yazıldı (atıf frontmatter'da).
+- **İlk kullanım:** 4 Yapada sitesinin denetimi (2026-11-09). Ayrıntılı rapor, depo herkese açık olduğu için buraya konmadı.
