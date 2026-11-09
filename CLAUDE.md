@@ -19,6 +19,8 @@ Kullanıcı profili: İşletme Anabilim Dalı — **Yönetim ve Organizasyon** y
 - Web güvenlik denetim raporları bu depoya **konmaz** (depo public); ayrıntılı bulgular saldırı yol haritası olur.
 - `claude-config/AUDIT-REPORT-2026-07-17.md` — 18 harici GitHub deposunun güvenlik denetimi kaydı: hangi bileşenlerin neden kurulduğu/kurulmadığı.
 
+- `claude-config/environment-setup.sh` — bulut ortamının kurulum betiği: claude-config'i geri yükler ve ECC'yi (affaan-m/everything-claude-code, `d2ef268`'e sabit, hook'larla) kurar.
+
 ## Senkronizasyon
 
 Bu dosyalar `~/.claude/` altındaki canlı yapılandırmadan **manuel olarak kopyalanmıştır** (otomatik senkronizasyon yoktur). `~/.claude/` altında yeni bir skill eklenir veya CLAUDE.md güncellenirse, bu depodaki `claude-config/` kopyasının da güncellenmesi ve commit edilmesi gerekir.
