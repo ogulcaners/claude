@@ -32,3 +32,8 @@ Bu dosyalar `~/.claude/` altındaki canlı yapılandırmadan **manuel olarak kop
   - API anahtarı depoya **yazılmaz**; `ELEVENLABS_API_KEY` ortam değişkeninden okunur (bulut ortam ayarlarında tanımlanmalı).
   - Üretilen/okunan ses dosyaları `~/elevenlabs` dizinindedir (`ELEVENLABS_MCP_BASE_PATH`); bu dizin dışındaki dosyalar sunucu tarafından reddedilir.
   - Sürüm yükseltirken yeni sürümü önce gözden geçir, sonra `args` içindeki sürümü güncelle.
+
+## Kayıtlı (Henüz Kurulmamış) Bileşenler — Yapada Dükkanı
+
+- `claude-config/vendor/claude-seo/` — `AgriciDaniel/claude-seo` v2.5.0 deposunun tam kopyası (MIT, commit `6be93f4`, 2026-11-09'da denetlendi: temiz). **Kurulu değil**; Yapada Dükkanı yeniden aktif edildiğinde kurulacak.
+- Aktivasyon adımları, güvenlik bulguları, ECC `seo` skill'iyle çakışma notu ve Yapada için ilk iş planı: `claude-config/vendor/CLAUDE-SEO-AKTIVASYON.md`. Kullanıcı "Yapada Dükkanı'nı aktif et" / "SEO'yu başlat" dediğinde **önce bu dosyayı oku** ve oradaki adımları izle.

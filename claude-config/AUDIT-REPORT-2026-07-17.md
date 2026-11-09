@@ -43,3 +43,9 @@ Hiçbir üçüncü taraf skill veya MCP sunucusu bu oturumda kurulmadı. Gerekç
 
 - Kendi bilgisayarında Zotero kullanıyorsa: `54yyyu/zotero-mcp` kurulabilir (Zotero masaüstü + "Allow other applications..." ayarı gerekir).
 - Word/PDF üretimi için Anthropic'in resmi `docx`/`pdf`/`doc-coauthoring` skill'leri `/plugin marketplace add anthropics/skills` ve `/plugin install document-skills@anthropic-agent-skills` ile kurulabilir.
+
+## Ek Denetim — 2026-11-09
+
+| Depo | Tür | Karar | Gerekçe |
+|---|---|---|---|
+| AgriciDaniel/claude-seo | Bireysel (27.6k★, aktif) | **Kaydedildi, kurulmadı (ertelendi)** | MIT; gizli bilgi/eval/shell=True yok; install.sh v2.5.0'a sabitli; tek hook şema doğrulayıcı. Yapada Dükkanı için ileride kurulacak. `~/.claude/skills/seo` yolunda ECC skill'iyle çakışır, plugin yolu önerilir. Ayrıntı: `vendor/CLAUDE-SEO-AKTIVASYON.md`. |
