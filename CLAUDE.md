@@ -7,7 +7,7 @@ Kullanıcı profili: İşletme Anabilim Dalı — **Yönetim ve Organizasyon** y
 ## Dizin Yapısı
 
 - `claude-config/CLAUDE.md` — `~/.claude/CLAUDE.md` ile aynı içerik (global akademik kurallar, kaynak doğrulama protokolü).
-- `claude-config/skills/*/SKILL.md` — `~/.claude/skills/` ile aynı 7 özel akademik skill:
+- `claude-config/skills/*/SKILL.md` — `~/.claude/skills/` ile aynı skill'ler (7 özel akademik skill + 1 üçüncü taraf):
   - `management-literature-reviewer` — 14 adımlı literatür taraması iş akışı
   - `organizational-theory-expert` — örgüt teorileri/örgütsel davranış danışmanlığı
   - `social-science-research-methods` — araştırma deseni/etik danışmanlığı
@@ -15,7 +15,8 @@ Kullanıcı profili: İşletme Anabilim Dalı — **Yönetim ve Organizasyon** y
   - `quantitative-research-analyst` — nicel araştırma tasarımı ve istatistik
   - `academic-writer-apa7` — APA 7 kaynak gösterme ve akademik yazım
   - `thesis-orchestrator` — tüm tez sürecini koordine eden meta-skill
-- `claude-config/AUDIT-REPORT-2026-07-17.md` — 18 harici GitHub deposunun güvenlik denetimi kaydı: hangi bileşenlerin neden kurulduğu/kurulmadığı.
+  - `find-skills` — üçüncü taraf (vercel-labs/skills, MIT); skills.sh ekosisteminde skill arama. Sonunda kurulumu onaya bağlayan yerel ek kurallar var.
+- `claude-config/AUDIT-REPORT-2026-07-17.md` — 18 harici GitHub deposunun güvenlik denetimi kaydı (+ sonraki ek kararlar): hangi bileşenlerin neden kurulduğu/kurulmadığı.
 
 ## Senkronizasyon
 

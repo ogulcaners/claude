@@ -43,3 +43,11 @@ Hiçbir üçüncü taraf skill veya MCP sunucusu bu oturumda kurulmadı. Gerekç
 
 - Kendi bilgisayarında Zotero kullanıyorsa: `54yyyu/zotero-mcp` kurulabilir (Zotero masaüstü + "Allow other applications..." ayarı gerekir).
 - Word/PDF üretimi için Anthropic'in resmi `docx`/`pdf`/`doc-coauthoring` skill'leri `/plugin marketplace add anthropics/skills` ve `/plugin install document-skills@anthropic-agent-skills` ile kurulabilir.
+
+## Ek Karar — 2026-11-09: `vercel-labs/skills` → `find-skills`
+
+| Depo | Tür | Karar | Gerekçe |
+|---|---|---|---|
+| vercel-labs/skills (`skills/find-skills`) | Kurum (Vercel Labs, MIT) | **Kuruldu** (yalnızca `find-skills` SKILL.md) | Tek bir Markdown dosyası; script, ikili dosya veya API anahtarı yok. Upstream commit `d3701c1` (2026-11-06) incelendi. Depodaki CLI (`npx skills`) **kurulmadı**; skill yalnızca ihtiyaç anında `npx skills find` çağrısını önerir. Risk: upstream metin `npx skills add ... -g -y` ile onaysız kurulum öneriyor — bu nedenle SKILL.md sonuna "Yerel Ek Kurallar" bölümü eklendi (kurulum öncesi kullanıcı onayı + salt-okunur kod incelemesi + bu rapora kayıt zorunlu, `-y` yasak). |
+
+Not: skills.sh bir dizin/leaderboard'dur; listelenen skill'ler topluluk tarafından yayımlanır ve **önceden denetlenmiş değildir**. Her biri ayrı ayrı bu raporun karar mantığına göre değerlendirilmelidir.
