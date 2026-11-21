@@ -16,6 +16,7 @@ Kullanıcı profili: İşletme Anabilim Dalı — **Yönetim ve Organizasyon** y
   - `academic-writer-apa7` — APA 7 kaynak gösterme ve akademik yazım
   - `thesis-orchestrator` — tüm tez sürecini koordine eden meta-skill
 - `claude-config/AUDIT-REPORT-2026-07-17.md` — 18 harici GitHub deposunun güvenlik denetimi kaydı: hangi bileşenlerin neden kurulduğu/kurulmadığı.
+- `claude-config/agents/` — [`msitarzewski/agency-agents`](https://github.com/msitarzewski/agency-agents) deposundan (MIT) alınan 255 Claude Code alt-ajan (subagent) tanımı, 17 bölüme ayrılmış (academic, engineering, marketing, security, project-management, vb.). `~/.claude/agents/` altına düz biçimde kurulur. Kaynak commit ve lisans notu için `claude-config/agents/README.md`'ye bakın.
 
 ## Senkronizasyon
 
