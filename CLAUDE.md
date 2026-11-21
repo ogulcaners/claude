@@ -15,6 +15,7 @@ Kullanıcı profili: İşletme Anabilim Dalı — **Yönetim ve Organizasyon** y
   - `quantitative-research-analyst` — nicel araştırma tasarımı ve istatistik
   - `academic-writer-apa7` — APA 7 kaynak gösterme ve akademik yazım
   - `thesis-orchestrator` — tüm tez sürecini koordine eden meta-skill
+- `claude-config/skills/unslop/` — üçüncü taraf UI tasarım skill'i (`heydamir/unslop`, CC-BY-4.0, commit `620163e`): AI yapımı görünen arayüzleri düzeltir. Akademik skill'lerden bağımsızdır; denetim kaydı için bkz. AUDIT-REPORT ek kaydı (2026-11-21).
 - `claude-config/AUDIT-REPORT-2026-07-17.md` — 18 harici GitHub deposunun güvenlik denetimi kaydı: hangi bileşenlerin neden kurulduğu/kurulmadığı.
 
 ## Senkronizasyon

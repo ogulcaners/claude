@@ -43,3 +43,11 @@ Hiçbir üçüncü taraf skill veya MCP sunucusu bu oturumda kurulmadı. Gerekç
 
 - Kendi bilgisayarında Zotero kullanıyorsa: `54yyyu/zotero-mcp` kurulabilir (Zotero masaüstü + "Allow other applications..." ayarı gerekir).
 - Word/PDF üretimi için Anthropic'in resmi `docx`/`pdf`/`doc-coauthoring` skill'leri `/plugin marketplace add anthropics/skills` ve `/plugin install document-skills@anthropic-agent-skills` ile kurulabilir.
+
+## Ek Kayıt — 2026-11-21: heydamir/unslop
+
+| Depo | Tür | Karar | Gerekçe |
+|---|---|---|---|
+| heydamir/unslop | Bireysel (19.7k★, CC-BY-4.0, son commit 2026-11-15) | **Kuruldu** (`~/.claude/skills/unslop`, sabitlenen commit `620163e`) | Kullanıcının açık talebiyle kuruldu. Akademik skill'lerle çakışmıyor (alan: UI tasarımı). `SKILL.md` ve 6 referans dosyası yalnızca tasarım talimatı içeriyor; gizli karakter veya talimat enjeksiyonu bulunmadı. API anahtarı/kimlik bilgisi istemiyor. İki betik var: `snapshot.mjs` (verilen URL'yi Playwright ile açıp HTML + ekran görüntüsü kaydeder) ve `story.mjs` (yalnızca `127.0.0.1` üzerinde geçici sunucu, `ffmpeg` çağrısı `execFileSync` ile kabuksuz, yol geçişi `story-path.mjs` ile engellenmiş). Betikler kurulumda çalışmaz, yalnızca istenince çalıştırılır. |
+
+Notlar: `snapshot.mjs` kendisine verilen adresi tarayıcıda açar; güvenilmeyen/iç ağ adresleriyle çalıştırılmamalı. Lisans atıf gerektirir (Damir Sokolovsky, @heydamir) — `LICENSE` skill klasörüne kopyalandı. Depodaki `examples/`, `test/` ve plugin manifestleri kopyalanmadı. Güncelleme otomatik değildir; yeni sürüm önce gözden geçirilmeli.
